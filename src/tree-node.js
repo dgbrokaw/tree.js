@@ -3,7 +3,7 @@ var Tree = require('./tree.js').Tree;
 /// To get all static methods of the Tree object as instance methods on your
 /// object, you can make it inherit from the "Tree.Node" class (use
 /// `new Tree.Node()` as the prototype).
-Node = function() {
+var Node = function() {
   this.children = [];
   this.parent = null;
   this.ls = null;
