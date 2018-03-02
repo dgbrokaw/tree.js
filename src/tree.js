@@ -9,8 +9,7 @@ itself. Instead, each object can be a tree node.
 Most of the methods can accept both a single node or an array of nodes to work on.
 */
 
-var Tree = { version: '1.3.7'};
-
+var Tree = { version: '1.3.7' };
 
 /// This line is for the automated tests with node.js
 if (typeof(exports) != 'undefined') {
@@ -595,44 +594,3 @@ Tree.get_by_value = function(value, node) {
 Tree.get_by_id = function(id, node) {
   return Tree.select_first(function (n) { return n.id === id }, node);
 }
-
-
-/// To get all static methods of the Tree object as instance methods on your
-/// object, you can make it inherit from the "Tree.Node" class (use
-/// `new Tree.Node()` as the prototype).
-Tree.Node = function() {
-  this.children = [];
-  this.parent = null;
-  this.ls = null;
-  this.rs = null;
-  this.id = Tree.uid();
-}
-Tree.Node.prototype.stringify = function() { return Tree.stringify(this) }
-Tree.Node.prototype.clone = function(keep_ids, fields_to_clone) { return Tree.clone(this, keep_ids, fields_to_clone) }
-Tree.Node.prototype.get_mapping_to = function(target) { return Tree.get_mapping_between(this, target) }
-Tree.Node.prototype.get_1to1_mapping_to = function(target, strict) { return Tree.get_1to1_mapping_between(this, target, strict) }
-Tree.Node.prototype.insert = function(idx, node) { return Tree.insert(this, idx, node) }
-Tree.Node.prototype.insert_range = function(idx, nodes) { return Tree.insert_range(this, idx, nodes) }
-Tree.Node.prototype.append_range = function(nodes) { return Tree.append_range(this, nodes) }
-Tree.Node.prototype.append = function(node) { return Tree.append(this, node) }
-Tree.Node.prototype.remove = function() { return Tree.remove(this) }
-Tree.Node.prototype.remove_range = function(nodes) { return Tree.remove_range(nodes) }
-Tree.Node.prototype.replace_with = function(other) { return Tree.replace(this, other) }
-Tree.Node.prototype.switch_with_sibling = function(other) { return Tree.switch_siblings(this, other) }
-Tree.Node.prototype.validate = function() { return Tree.validate(this) }
-Tree.Node.prototype.get_child = function(path) { return Tree.get_child(path, this) }
-Tree.Node.prototype.get_parent = function(level) { return Tree.get_parent(level, this) }
-Tree.Node.prototype.get_path = function() { return Tree.get_path(this) }
-Tree.Node.prototype.for_each = function(f) { return Tree.for_each(f, this) }
-Tree.Node.prototype.map = function(f) { return Tree.map(f, this) }
-Tree.Node.prototype.filter = function(f) { return Tree.filter(f, this) }
-Tree.Node.prototype.filterRange = function(f, no_overlap) { return Tree.filterRange(f, this, no_overlap) }
-Tree.Node.prototype.select_all = function() { return Tree.select_all(this) }
-Tree.Node.prototype.select_first = function(f) { return Tree.select_first(f, this) }
-Tree.Node.prototype.get_leaf_nodes = function() { return Tree.get_leaf_nodes(this) }
-Tree.Node.prototype.is_root = function() { return Tree.is_root(this) }
-Tree.Node.prototype.get_root = function() { return Tree.get_root(this) }
-Tree.Node.prototype.get_by_value = function(value) { return Tree.get_by_value(value, this) }
-Tree.Node.prototype.get_by_id = function(id) { return Tree.get_by_id(id, this) }
-Tree.Node.prototype.has_children = function() { return this.children && this.children.length > 0 }
-Tree.Node.prototype.get_idx = function() { return Tree.get_idx(this) }
