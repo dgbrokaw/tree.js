@@ -16,6 +16,8 @@ if (typeof(exports) != 'undefined') {
   exports.Tree = Tree;
 }
 
+Tree.Node = require('./tree-node.js').Node;
+
 /// Will parse a sting like '[A,B[b1,b2,b3],C]' and return the top-level node of a
 /// tree structure. If there are more than a single top-level node, an array of them
 /// is returned (e.g. 'A,B'). Use square brackets to denote children of a node and commas
