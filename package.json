@@ -20,7 +20,8 @@
     "uglify-js": "2.x.x"
   },
   "scripts": {
-    "test": "make test",
-    "build": "babel src -d dist"
+    "build": "babel src -d dist",
+    "pretest": "npm run build",
+    "test": "./node_modules/.bin/nodeunit test/tree-test.js"
   }
 }
