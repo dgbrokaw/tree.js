@@ -1,5 +1,5 @@
-// var Tree = require('./tree.js').Tree;
 import Tree from "./tree.js";
+import stringify from "./stringify.js";
 
 /// To get all static methods of the Tree object as instance methods on your
 /// object, you can make it inherit from the "Tree.Node" class (use
@@ -12,7 +12,7 @@ export default function Node() {
   this.id = Tree.uid();
 }
 
-Node.prototype.stringify = function() { return Tree.stringify(this) }
+Node.prototype.stringify = function() { return stringify(this) }
 Node.prototype.clone = function(keep_ids, fields_to_clone) { return Tree.clone(this, keep_ids, fields_to_clone) }
 Node.prototype.get_mapping_to = function(target) { return Tree.get_mapping_between(this, target) }
 Node.prototype.get_1to1_mapping_to = function(target, strict) { return Tree.get_1to1_mapping_between(this, target, strict) }
@@ -41,8 +41,3 @@ Node.prototype.get_by_value = function(value) { return Tree.get_by_value(value, 
 Node.prototype.get_by_id = function(id) { return Tree.get_by_id(id, this) }
 Node.prototype.has_children = function() { return this.children && this.children.length > 0 }
 Node.prototype.get_idx = function() { return Tree.get_idx(this) }
-
-/// This line is for the automated tests with node.js
-// if (typeof(exports) != 'undefined') {
-//   exports.Node = Node;
-// }

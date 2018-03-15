@@ -15,63 +15,6 @@ var Tree = { version: '1.3.7' };
 
 export default Tree;
 
-/// This line is for the automated tests with node.js
-// if (typeof(exports) != 'undefined') {
-//   exports.Tree = Tree;
-// }
-//
-// Tree.Node = require('./tree-node.js').Node;
-
-
-/// Will parse a sting like '[A,B[b1,b2,b3],C]' and return the top-level node of a
-/// tree structure. If there are more than a single top-level node, an array of them
-/// is returned (e.g. 'A,B'). Use square brackets to denote children of a node and commas
-/// to separate nodes from each other. You can use any names for the nodes except ones
-/// containing ',', '[' or ']'. The names will be saved in each node's `value` field.
-/// Nodes will also be created in absense of values, e.g. '[,]' will return an object
-/// with empty value that has an array `children` with two nodes with empty values.
-Tree.parse = function(str) {
-  var top = new Node();
-  var curr = top.append(new Node());
-  var i;
-  curr.value = '';
-  for (i=0; i<str.length; i++) {
-    var c = str[i];
-    if (c == '[') {
-      curr = curr.append(new Node());
-      curr.value = '';
-    } else if (c == ']') {
-      curr = curr.parent;
-      if (curr === top) throw 'parse error';
-    } else if (c == ',') {
-      curr = curr.parent.append(new Node());
-      curr.value = '';
-    } else {
-      curr.value += c;
-    }
-  }
-  for (i=0; i<top.children.length; i++) top.children[i].parent = null;
-  if (top.children.length === 1) return top.children[0];
-  return top.children;
-}
-
-/// Inverse of Tree.parse, returns a string representation of the nodes, using their
-/// `value` fields. This is just for debugging and allows you to look at the structure
-/// of a tree and the `value` fields of its nodes. `nodes` can be a single node or an
-/// array of nodes.
-Tree.stringify = function(nodes) {
-  var f = function(node) {
-    var str = '';
-    if ('value' in node) str += node.value;
-    if (node.children && node.children[0]) {
-      str += '[' + node.children.map(f).join(',') + ']';
-    }
-    return str;
-  }
-  if (!Array.isArray(nodes)) nodes = [nodes];
-  return nodes.map(f).join(',');
-};
-
 /// Adds a uid() function to Tree, that returns a random hex number with 16 digets as string.
 (function() {
   var b32 = 0x100000000, f = 0xf, b = []
