@@ -8,41 +8,11 @@ itself. Instead, each object can be a tree node.
 
 Most of the methods can accept both a single node or an array of nodes to work on.
 */
-
-import Node from "./tree-node.js";
+import id from "./helpers/id.js";
 
 var Tree = { version: '1.3.7' };
 
 export default Tree;
-
-/// Adds a uid() function to Tree, that returns a random hex number with 16 digets as string.
-(function() {
-  var b32 = 0x100000000, f = 0xf, b = []
-     ,str = ['0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'];
-  function uid() {
-    var i = 0;
-    var r = Math.random()*b32;
-    b[i++] = str[r & f];
-    b[i++] = str[r>>>4 & f];
-    b[i++] = str[r>>>8 & f];
-    b[i++] = str[r>>>12 & f];
-    b[i++] = str[r>>>16 & f];
-    b[i++] = str[r>>>20 & f];
-    b[i++] = str[r>>>24 & f];
-    b[i++] = str[r>>>28 & f];
-    r = Math.random()*b32;
-    b[i++] = str[r & f];
-    b[i++] = str[r>>>4 & f];
-    b[i++] = str[r>>>8 & f];
-    b[i++] = str[r>>>12 & f];
-    b[i++] = str[r>>>16 & f];
-    b[i++] = str[r>>>20 & f];
-    b[i++] = str[r>>>24 & f];
-    b[i++] = str[r>>>28 & f];
-    return "_" + b.join("");
-  }
-  Tree.uid = uid;
-})();
 
 /// Will clone a node and its children. Attributes beside 'children', 'ls', 'rs' and 'parent' will
 /// just be a shallow copy of the original nodes. Attributes starting with '_' will not be copied at
@@ -60,7 +30,7 @@ Tree.clone = function(nodes, keep_ids, fields_to_clone) {
       for (var key in node) { if (key[0] !== '_') cloned[key] = node[key] }
     }
     delete cloned.ls; delete cloned.rs; delete cloned.parent;
-    if (node.id && !keep_ids) cloned.id = Tree.uid();
+    if (node.id && !keep_ids) cloned.id = id();
     if (node.children) {
       cloned.children = [];
       for (i=0; i<node.children.length; i++) {
