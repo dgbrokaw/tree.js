@@ -3,7 +3,7 @@ TESTER = ./node_modules/.bin/nodeunit
 
 all: tree.min.js
 
-test: src/index.js
+test: dist/index.js
 	$(TESTER) test/tree-test.js
 
 test-cov: src/index.js

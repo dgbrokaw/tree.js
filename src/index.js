@@ -1,7 +1,6 @@
-var Tree = require('./tree.js').Tree;
-Tree.Node = require('./tree-node.js').Node;
+import Tree from "./tree.js";
+import Node from "./tree-node.js";
 
-/// This line is for the automated tests with node.js
-if (typeof(exports) != 'undefined') {
-  exports.Tree = Tree;
-}
+Tree.Node = Node;
+
+export { Tree };

@@ -13,11 +13,14 @@
     "url": "https://github.com/eweitnauer/tree.js"
   },
   "devDependencies": {
-    "uglify-js": "2.x.x",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "istanbul": "0.2.x",
     "nodeunit": "0.8.x",
-    "istanbul": "0.2.x"
+    "uglify-js": "2.x.x"
   },
   "scripts": {
-    "test": "make test"
+    "test": "make test",
+    "build": "babel src -d dist"
   }
 }

@@ -9,14 +9,19 @@ itself. Instead, each object can be a tree node.
 Most of the methods can accept both a single node or an array of nodes to work on.
 */
 
+import Node from "./tree-node.js";
+
 var Tree = { version: '1.3.7' };
 
-/// This line is for the automated tests with node.js
-if (typeof(exports) != 'undefined') {
-  exports.Tree = Tree;
-}
+export default Tree;
 
-Tree.Node = require('./tree-node.js').Node;
+/// This line is for the automated tests with node.js
+// if (typeof(exports) != 'undefined') {
+//   exports.Tree = Tree;
+// }
+//
+// Tree.Node = require('./tree-node.js').Node;
+
 
 /// Will parse a sting like '[A,B[b1,b2,b3],C]' and return the top-level node of a
 /// tree structure. If there are more than a single top-level node, an array of them
@@ -26,20 +31,20 @@ Tree.Node = require('./tree-node.js').Node;
 /// Nodes will also be created in absense of values, e.g. '[,]' will return an object
 /// with empty value that has an array `children` with two nodes with empty values.
 Tree.parse = function(str) {
-  var top = new Tree.Node();
-  var curr = top.append(new Tree.Node());
+  var top = new Node();
+  var curr = top.append(new Node());
   var i;
   curr.value = '';
   for (i=0; i<str.length; i++) {
     var c = str[i];
     if (c == '[') {
-      curr = curr.append(new Tree.Node());
+      curr = curr.append(new Node());
       curr.value = '';
     } else if (c == ']') {
       curr = curr.parent;
       if (curr === top) throw 'parse error';
     } else if (c == ',') {
-      curr = curr.parent.append(new Tree.Node());
+      curr = curr.parent.append(new Node());
       curr.value = '';
     } else {
       curr.value += c;
