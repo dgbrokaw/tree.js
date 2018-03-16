@@ -1,5 +1,10 @@
 import Tree from "./tree.js";
+import id from "./helpers/id.js";
 import stringify from "./stringify.js";
+import validate from "./validate.js";
+import clone from "./clone.js";
+import mapBetweenTrees from "./map.js";
+import oneToOneMapBetweenTrees from "./map-one-to-one.js";
 
 /// To get all static methods of the Tree object as instance methods on your
 /// object, you can make it inherit from the "Tree.Node" class (use
@@ -9,13 +14,15 @@ export default function Node() {
   this.parent = null;
   this.ls = null;
   this.rs = null;
-  this.id = Tree.uid();
+  this.id = id();
 }
 
 Node.prototype.stringify = function() { return stringify(this) }
-Node.prototype.clone = function(keep_ids, fields_to_clone) { return Tree.clone(this, keep_ids, fields_to_clone) }
-Node.prototype.get_mapping_to = function(target) { return Tree.get_mapping_between(this, target) }
-Node.prototype.get_1to1_mapping_to = function(target, strict) { return Tree.get_1to1_mapping_between(this, target, strict) }
+Node.prototype.clone = function(keep_ids, fields_to_clone) { return clone(this, keep_ids, fields_to_clone) }
+Node.prototype.get_mapping_to = function(target) { return mapBetweenTrees(this, target) }
+Node.prototype.get_1to1_mapping_to = function(target, strict) { return oneToOneMapBetweenTrees(this, target, strict) }
+Node.prototype.validate = function() { return validate(this) }
+
 Node.prototype.insert = function(idx, node) { return Tree.insert(this, idx, node) }
 Node.prototype.insert_range = function(idx, nodes) { return Tree.insert_range(this, idx, nodes) }
 Node.prototype.append_range = function(nodes) { return Tree.append_range(this, nodes) }
@@ -24,7 +31,6 @@ Node.prototype.remove = function() { return Tree.remove(this) }
 Node.prototype.remove_range = function(nodes) { return Tree.remove_range(nodes) }
 Node.prototype.replace_with = function(other) { return Tree.replace(this, other) }
 Node.prototype.switch_with_sibling = function(other) { return Tree.switch_siblings(this, other) }
-Node.prototype.validate = function() { return Tree.validate(this) }
 Node.prototype.get_child = function(path) { return Tree.get_child(path, this) }
 Node.prototype.get_parent = function(level) { return Tree.get_parent(level, this) }
 Node.prototype.get_path = function() { return Tree.get_path(this) }

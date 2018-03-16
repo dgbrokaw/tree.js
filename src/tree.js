@@ -8,133 +8,10 @@ itself. Instead, each object can be a tree node.
 
 Most of the methods can accept both a single node or an array of nodes to work on.
 */
-import id from "./helpers/id.js";
 
 var Tree = { version: '1.3.7' };
 
 export default Tree;
-
-/// Will clone a node and its children. Attributes beside 'children', 'ls', 'rs' and 'parent' will
-/// just be a shallow copy of the original nodes. Attributes starting with '_' will not be copied at
-/// all. 'ls', 'rs' and 'parent' will be set to the correct values for all children and will be set to
-/// undefined for the passed node. A new random id is assigned to the cloned node if the original had
-/// an id, unless the optional keep_ids parameter is passed as true.
-/// `nodes` can either be a single node or an array of nodes. The cloned node or nodes are returned.
-Tree.clone = function(nodes, keep_ids, fields_to_clone) {
-  var f = function(node) {
-    var i;
-    var cloned = new node.constructor();
-    if (fields_to_clone) {
-      for (i=0; i<fields_to_clone.length; i++) cloned[fields_to_clone[i]] = node[fields_to_clone[i]];
-    } else {
-      for (var key in node) { if (key[0] !== '_') cloned[key] = node[key] }
-    }
-    delete cloned.ls; delete cloned.rs; delete cloned.parent;
-    if (node.id && !keep_ids) cloned.id = id();
-    if (node.children) {
-      cloned.children = [];
-      for (i=0; i<node.children.length; i++) {
-        cloned.children.push(f(node.children[i]));
-        cloned.children[i].parent = cloned;
-      }
-      for (i=0; i<node.children.length; i++) {
-        cloned.children[i].ls = cloned.children[i-1];
-        cloned.children[i].rs = cloned.children[i+1];
-      }
-    }
-    return cloned;
-  }
-  if (!Array.isArray(nodes)) return f(nodes);
-  var cloned = nodes.map(f);
-  // make sure that the cloned nodes are siblings to each other, if the
-  // original nodes were siblings, too
-  if (nodes.length > 1) for (var i=0; i<nodes.length; i++) {
-    if (i>0 && nodes[i].ls === nodes[i-1]) cloned[i].ls = cloned[i-1];
-    if (i<nodes.length-1 && nodes[i].rs === nodes[i+1]) cloned[i].rs = cloned[i+1];
-  }
-
-  return cloned;
-}
-
-/**
- * Pass two identically structured trees or arrays of trees and the method
- * will return an object that maps the ids of all source tree nodes to arrays
- * of the respective target tree nodes.
- *
- * If a source node is a leaf node while its corresponding target node has
- * children, the source node will be mapped to an array containing the target
- * node and all its descendents.
- *
- * If a source node has children while its corresponding target node is a
- * leaf node, the source node's children all get mapped to arrays containing
- * the same target leaf node as only element.
- *
- * If the only1to1 parameter is passed as true, the function will not allow
- * to two cases above and raise an exception should the structure of source
- * and target tree differ. In cases where the two cases above do not apply
- * and a source node has more or less children than its corresponding target
- * node, the method throws an exception. It also throws an exception if there
- * are duplicate ids in the source tree.
- */
-Tree.get_mapping_between = function(source_tree, target_tree) {
-  var map = {};
-
-  function mapfn(source, target) {
-    if (source.id in map) throw "duplicate id in source tree";
-    map[source.id] = [target];
-    if (source.children.length !== target.children.length) {
-      if (!source.has_children()) map[source.id] = target.select_all();
-      else if (!target.has_children()) source.for_each(function(s) { map[s.id] = [target]});
-      else throw "tree structures don't match";
-    } else {
-      for (var i=0; i<source.children.length; i++) mapfn(source.children[i], target.children[i]);
-    }
-  }
-
-  if (Array.isArray(source_tree)) {
-    if (source_tree.length !== target_tree.length) throw "tree structures don't match";
-    for (var i=0; i<source_tree.length; i++) mapfn(source_tree[i], target_tree[i]);
-  } else mapfn(source_tree, target_tree);
-
-  return map;
-}
-
-/**
- * Pass two identically structured trees or arrays of trees and the method
- * will return an object that maps the ids of all source tree nodes to an array
- * with a single element -- the respective target tree node. If the trees / arrays are structured
- * differently, or if there is a duplicate id in the source nodes, the
- * methods throws an exception if in strict mode (by default strict=true).
- * If not in strict mode, the structure mismatch is ignored and all a partial
- * mapping is returned.
- */
-Tree.get_1to1_mapping_between = function(source_tree, target_tree, strict) {
-  var map = {};
-  if (arguments.length < 3) strict = true;
-
-  function mapfn(source, target) {
-    if (strict && source.id in map) throw "duplicate id in source tree";
-    map[source.id] = [target];
-    if (strict && source.children.length !== target.children.length)
-      throw "tree structures don't match"
-    var slen = source.children.length, tlen = target.children.length;
-    for (var i=0; i<slen; i++) {
-      if (i<tlen) mapfn(source.children[i], target.children[i]);
-      else source.children[i].for_each(function(s) { map[s.id] = []});
-    }
-  }
-
-  if (Array.isArray(source_tree)) {
-    if (strict && source_tree.length !== target_tree.length) throw "tree structures don't match";
-    var slen = source_tree.length, tlen = target_tree.length;
-    for (var i=0; i<slen; i++) {
-      if (i<tlen) mapfn(source_tree[i], target_tree[i]);
-      else source_tree[i].for_each(function(s) { map[s.id] = []});
-    }
-  } else mapfn(source_tree, target_tree);
-
-  return map;
-}
 
 /// Returns the smallest range of nodes (continuous, ordered neighbors) covering the passed
 /// nodes. The method first gets the closest common ancestor and then selects a range of its
@@ -326,25 +203,6 @@ Tree.switch_siblings = function(n1, n2) {
     h = n1.ls; n1.ls = n2.ls; n2.ls = h;
     h = n1.rs; n1.rs = n2.rs; n2.rs = h;
   }
-}
-
-/// Will throw an expecption if any node in the tree has invalid value for parent, ls or rs.
-/// `nodes` can either be a single node or an array of nodes. Accordingly, a single node or an array
-/// of nodes is returned.
-Tree.validate = function(nodes) {
-  var check = function(node, parent) {
-    if (node.parent != parent) throw "wrong parent information";
-    if (node.children) {
-      for (var i=0; i<node.children.length; i++) {
-        var child = node.children[i];
-        if (child.ls != node.children[i-1]) throw "wrong ls information";
-        if (child.rs != node.children[i+1]) throw "wrong rs information";
-        check(child, node);
-      }
-    }
-  }
-  if (!Array.isArray(nodes)) nodes = [nodes];
-  for (var i=0; i<nodes.length; i++) check(nodes[i], null);
 }
 
 /// Returns the index of the passed node in its parent node or -1 if it does not

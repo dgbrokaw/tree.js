@@ -3,13 +3,25 @@ import Tree from "./tree.js";
 import Node from "./tree-node.js";
 Tree.Node = Node;
 
-import parse from "./parse.js";
-Tree.parse = parse;
+import parseTree from "./parse.js";
+Tree.parse = parseTree;
 
-import stringify from "./stringify.js";
-Tree.stringify = stringify;
+import validateTree from "./validate.js";
+Tree.validate = validateTree;
+
+import stringifyTree from "./stringify.js";
+Tree.stringify = stringifyTree;
 
 import id from "./helpers/id.js";
-Tree.uid = id; // maintain original interface
+Tree.uid = id;
+
+import cloneTree from "./clone.js";
+Tree.clone = cloneTree;
+
+import mapBetweenTrees from "./map.js";
+Tree.get_mapping_between = mapBetweenTrees;
+
+import oneToOneMapBetweenTrees from "./map-one-to-one.js";
+Tree.get_1to1_mapping_between = oneToOneMapBetweenTrees;
 
 export { Tree };

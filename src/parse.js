@@ -7,7 +7,7 @@ import Node from "./tree-node.js";
 /// containing ',', '[' or ']'. The names will be saved in each node's `value` field.
 /// Nodes will also be created in absense of values, e.g. '[,]' will return an object
 /// with empty value that has an array `children` with two nodes with empty values.
-export default function treeParse(str) {
+export default function parseTree(str) {
   var top = new Node();
   var curr = top.append(new Node());
   var i;
