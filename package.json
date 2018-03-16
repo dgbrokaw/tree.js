@@ -22,6 +22,6 @@
   "scripts": {
     "build": "babel src -d dist",
     "pretest": "npm run build",
-    "test": "./node_modules/.bin/nodeunit test/tree-test.js"
+    "test": "./node_modules/.bin/nodeunit test/helpers/as-array-test.js test/tree-test.js"
   }
 }
