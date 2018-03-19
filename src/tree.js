@@ -284,7 +284,7 @@ Tree.select_first = function(selector, node) {
   return null;
 }
 
-/// Returns the closest common anchestor of the passed nodes.
+/// Returns the closest common ancestor of the passed nodes.
 Tree.get_cca = function(nodes) {
   return (new NodeSelection(nodes)).cca;
 }
@@ -294,12 +294,12 @@ Tree.get_leaf_nodes = function(node) {
   return Tree.filter(function(n) { return !(n.children && n.children.length) }, node);
 }
 
-/// Retruns true if the node is top-level in the tree (its parent is the Tree object).
+/// Returns true if the node is top-level in the tree (its parent is the Tree object).
 Tree.is_root = function(node) {
   return !node.parent;
 }
 
-/// Retruns true if the passed node array is a proper node range, which is the
+/// Returns true if the passed node array is a proper node range, which is the
 /// case only if they are all siblings and ordered from left to right.
 Tree.is_range = function(nodes) {
   for (var i = 1; i < nodes.length; i++) {
