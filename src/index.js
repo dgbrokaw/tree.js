@@ -24,4 +24,6 @@ Tree.get_mapping_between = mapBetweenTrees;
 import oneToOneMapBetweenTrees from "./map-one-to-one.js";
 Tree.get_1to1_mapping_between = oneToOneMapBetweenTrees;
 
-export { Tree };
+import NodeSelection from "./node-selection.js";
+
+export { Tree, NodeSelection };
