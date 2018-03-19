@@ -222,7 +222,7 @@ Tree.for_each = function(f, node) {
   for (var i=0; i<nodes.length; i++) traverse(nodes[i]);
 }
 
-/// Calls the passed function for each of the passed nodes and their anchestors, depth-first.
+/// Calls the passed function for each of the passed nodes and their children, depth-first.
 /// The results are stored in an array that is returned. Node can either be a single node or
 /// an array of nodes.
 Tree.map = function(f, node) {
