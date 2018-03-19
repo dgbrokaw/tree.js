@@ -67,30 +67,35 @@ exports["NodeSelection: ranges"] = function(test) {
   test.equals(r2[1], t1.children[2]);
   test.equals(r2[2], t1.children[3]);
 
-  var r3 = Tree.nodes_to_range([Tree.get_child([3,0,1],t1)
+  var sel3 = new NodeSelection([Tree.get_child([3,0,1],t1)
                                ,Tree.get_child([3,0,2,0],t1)
                                ,Tree.get_child([3,0,2,1],t1)]);
+  var r3 = sel3.range;
   test.equals(r3.length, 2);
   test.equals(r3[0], Tree.get_child([3,0,1],t1));
   test.equals(r3[1], Tree.get_child([3,0,2],t1));
 
-  var r4 = Tree.nodes_to_range([Tree.get_child([1,0],t1)
+  var sel4 = new NodeSelection([Tree.get_child([1,0],t1)
                                ,Tree.get_child([3,0,2,1],t1)]);
+  var r4 = sel4.range;
   test.equals(r4.length, 3);
   test.equals(r4[0], t1.children[1]);
   test.equals(r4[1], t1.children[2]);
   test.equals(r4[2], t1.children[3]);
 
-  var r5 = Tree.nodes_to_range([t1.children[1], t1.children[1].children[0]]);
+  var sel5 = new NodeSelection([t1.children[1], t1.children[1].children[0]]);
+  var r5 = sel5.range;
   test.equals(r5.length, 1);
   test.equals(r5[0], t1.children[1]);
 
   var t2 = Tree.parse('[A[a,b,c,d]]');
-  var r6 = Tree.nodes_to_range([t2.get_child([0,0]), t2.get_child([0,2])]);
+  var sel6 = new NodeSelection([t2.get_child([0,0]), t2.get_child([0,2])]);
+  var r6 = sel6.range;
   test.equals(r6.length, 3);
 
   var t3 = Tree.parse('[a,b,c,d,e,f]');
-  var r7 = Tree.nodes_to_range([t3.children[4], t3.children[5]]);
+  var sel7 = new NodeSelection([t3.children[4], t3.children[5]]);
+  var r7 = sel7.range;
   test.equals(r7.length, 2);
   test.equals(r7[0].value, 'e');
   test.equals(r7[1].value, 'f');
