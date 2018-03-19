@@ -9,12 +9,24 @@ import oneToOneMapBetweenTrees from "./map-one-to-one.js";
 /// To get all static methods of the Tree object as instance methods on your
 /// object, you can make it inherit from the "Tree.Node" class (use
 /// `new Tree.Node()` as the prototype).
-export default function Node() {
-  this.children = [];
-  this.parent = null;
-  this.ls = null;
-  this.rs = null;
-  this.id = id();
+export default class Node {
+  constructor() {
+    this.children = [];
+    this.parent = null;
+    this.ls = null;
+    this.rs = null;
+    this.id = id();
+  }
+
+  insert(idx, child) {
+    child.ls = this.children[idx-1];
+    if (this.children[idx-1]) this.children[idx-1].rs = child;
+    child.rs = this.children[idx];
+    if (this.children[idx]) this.children[idx].ls = child;
+    child.parent = this;
+    this.children.splice(idx, 0, child);
+    return child;
+  }
 }
 
 Node.prototype.stringify = function() { return stringify(this) }
@@ -23,7 +35,6 @@ Node.prototype.get_mapping_to = function(target) { return mapBetweenTrees(this, 
 Node.prototype.get_1to1_mapping_to = function(target, strict) { return oneToOneMapBetweenTrees(this, target, strict) }
 Node.prototype.validate = function() { return validate(this) }
 
-Node.prototype.insert = function(idx, node) { return Tree.insert(this, idx, node) }
 Node.prototype.insert_range = function(idx, nodes) { return Tree.insert_range(this, idx, nodes) }
 Node.prototype.append_range = function(nodes) { return Tree.append_range(this, nodes) }
 Node.prototype.append = function(node) { return Tree.append(this, node) }

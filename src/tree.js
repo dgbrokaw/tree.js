@@ -8,6 +8,7 @@ itself. Instead, each object can be a tree node.
 
 Most of the methods can accept both a single node or an array of nodes to work on.
 */
+import Node from "./tree-node.js";
 import NodeSelection from "./node-selection.js";
 
 var Tree = { version: '1.3.7' };
@@ -23,14 +24,8 @@ Tree.nodes_to_range = function(nodes) {
 
 /// Inserts a node into the tree as the child at position 'idx' of 'parent'. Returns the inserted
 /// node.
-Tree.insert = function(parent, idx, node) {
-  node.ls = parent.children[idx-1];
-  if (parent.children[idx-1]) parent.children[idx-1].rs = node;
-  node.rs = parent.children[idx];
-  if (parent.children[idx]) parent.children[idx].ls = node;
-  node.parent = parent;
-  parent.children.splice(idx, 0, node);
-  return node;
+Tree.insert = function(parent, idx, child) {
+  return parent.insert(idx, child);
 }
 
 /// Inserts a range of nodes at the position `idx` into the children array
