@@ -40,12 +40,21 @@ export default class NodeSelection {
     return this.toClosestCommonAncestor();
   }
 
+  /// Returns true if the selected nodes are a proper node range, which is the
+  /// case only if they are all siblings and ordered from left to right.
+  isRange() {
+    for (let i = 1; i < this._selection.length; i++) {
+      if (this._selection[i-1].rs !== this._selection[i]) return false;
+    }
+    return true;
+  }
+
   // Returns the smallest range of nodes (continuous, ordered neighbors)
   // covering the selected. The method first gets the closest common
   // ancestor and then selects a range of its children that contains all the
   // selected nodes.
   get range() {
-    var nodes = this._selection;
+    let nodes = this._selection;
     if (nodes.length < 1) {
       throw "[NodeSelection] Attempting to get the range of an empty selection"
     }
@@ -53,21 +62,21 @@ export default class NodeSelection {
       return [nodes[0]];
     }
 
-    var tree = Tree.get_root(nodes[0]);
+    let tree = Tree.get_root(nodes[0]);
 
-    var data = ccaHelper(nodes, tree);
+    let data = ccaHelper(nodes, tree);
 
     // get the cca's left-most and right-most child that contains one of the nodes
-    var rm=-1, lm=data.closestCommonAncestor.children.length, i;
+    let rm=-1, lm=data.closestCommonAncestor.children.length, i;
     for (i=0; i<nodes.length; i++) {
-      var n = Tree.get_child(data.paths[i].slice(0, data.commonPathLength+1), tree);
-      var idx = data.closestCommonAncestor.children.indexOf(n);
+      let n = Tree.get_child(data.paths[i].slice(0, data.commonPathLength+1), tree);
+      let idx = data.closestCommonAncestor.children.indexOf(n);
       if (idx > rm) rm = idx;
       if (idx < lm) lm = idx;
     }
 
     // now select the whole range of nodes from left to right
-    var range = [];
+    let range = [];
     for (i=lm; i<=rm; i++) range.push(data.closestCommonAncestor.children[i]);
 
     return range;
@@ -95,14 +104,14 @@ function ccaHelper(nodes, tree) {
     throw "[NodeSelection] Attempting to find the closest common ancestor of an empty selection.";
   }
 
-  var paths = nodes.map(node => Tree.get_path(node));
+  let paths = nodes.map(node => Tree.get_path(node));
 
-  var commonPathLength = 0;
+  let commonPathLength = 0;
   while (pathsMatchAtDepth(paths, commonPathLength)) {
     commonPathLength++;
   }
 
-  var closestCommonAncestor = Tree.get_child(paths[0].slice(0, commonPathLength), tree || Tree.get_root(nodes[0]));
+  let closestCommonAncestor = Tree.get_child(paths[0].slice(0, commonPathLength), tree || Tree.get_root(nodes[0]));
 
   return { paths, commonPathLength, closestCommonAncestor };
 }
@@ -110,8 +119,8 @@ function ccaHelper(nodes, tree) {
 // Checks whether the paths have the same value AT THE GIVEN DEPTH.
 // RETURNS FALSE IF ANY OF THE PATHS END AT THE GIVEN DEPTH.
 function pathsMatchAtDepth(paths, depth) {
-  var val = paths[0][depth];
-  for (var i=0; i<paths.length; i++) {
+  let val = paths[0][depth];
+  for (let i=0; i<paths.length; i++) {
     if (paths[i].length <= depth+1) return false; // we want an ancestor, so if already at leaf, return
     if (paths[i][depth] !== val) return false;
   }

@@ -239,21 +239,10 @@ exports['remove'] = function(test) {
 }
 
 exports['replace'] = function(test) {
-  var t0 = Tree.parse('[A]');
-  Tree.replace(t0.children[0], {value: 'B', children:[]});
-  test.equals(Tree.stringify(t0), '[B]');
-  test.doesNotThrow(function(){Tree.validate(t0)});
-
-
   var t1 = Tree.parse('[A[a,b],B]');
   Tree.replace(t1.children[0], t1.children[0].children[1]);
   test.equals(Tree.stringify(t1), '[b,B]');
   test.doesNotThrow(function(){Tree.validate(t1)});
-
-  var t1b = Tree.parse('[A[a,b],B]');
-  t1b.children[0].replace_with(t1b.children[0].children[1]);
-  test.equals(Tree.stringify(t1b), '[b,B]');
-  test.doesNotThrow(function(){Tree.validate(t1b)});
 
   var t2 = Tree.parse('[A,B]');
   var t3 = Tree.parse('[C[a],D]');
@@ -286,11 +275,6 @@ exports['switch_siblings'] = function(test) {
   Tree.switch_siblings(t2.children[1], t2.children[2]);
   test.equals(Tree.stringify(t2), '[A,C,B]');
   test.doesNotThrow(function(){Tree.validate(t2)});
-
-  var t2b = Tree.parse('[A,B,C]');
-  t2b.children[1].switch_with_sibling(t2b.children[2]);
-  test.equals(Tree.stringify(t2b), '[A,C,B]');
-  test.doesNotThrow(function(){Tree.validate(t2b)});
 
   var t3 = Tree.parse('[A,B,C]');
   Tree.switch_siblings(t3.children[1], t3.children[0]);

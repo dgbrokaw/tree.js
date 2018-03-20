@@ -114,15 +114,12 @@ Tree.remove_range = function(nodes) {
 /// to replace a node with its child.
 /// Returns the inserted node.
 Tree.replace = function(n1, n2) {
-  if (n1 === n2) return n1;
-  if (n2.parent) Tree.remove(n2);
-  var parent = n1.parent
-    , idx = Tree.remove(n1);
-  return Tree.insert(parent, idx, n2);
+  return n1.replaceWith(n2);
 }
 
 /// Will switch n1 with n2 if they have the same parent. Otherwise throws an exception.
 Tree.switch_siblings = function(n1, n2) {
+  return n1.switchWithSibling(n2);
   if (n1.parent != n2.parent) throw "Called switch_siblings on nodes that are no siblings!";
   var p = n1.parent;
   var idx1 = p.children.indexOf(n1);
@@ -271,10 +268,7 @@ Tree.is_root = function(node) {
 /// Returns true if the passed node array is a proper node range, which is the
 /// case only if they are all siblings and ordered from left to right.
 Tree.is_range = function(nodes) {
-  for (var i = 1; i < nodes.length; i++) {
-    if (nodes[i-1].rs !== nodes[i]) return false;
-  }
-  return true;
+  return (new NodeSelection(nodes)).isRange();
 }
 
 Tree.get_root = function(node) {

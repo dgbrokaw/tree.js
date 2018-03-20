@@ -87,6 +87,33 @@ export default class Node {
     this.parent = null;
     return idx;
   }
+
+  /// Replaces this node with the passed node by removing itself and inserting
+  // the passed node its old position. If the passed node was part of a tree
+  // (had a parent), it will be removed before being inserted at the new
+  // position. It is safe to replace a node with its child.
+  /// Returns the inserted node.
+  replaceWith(node) {
+    if (this === node) {
+      return this;
+    }
+    if (!node.isRoot()) {
+      node.remove();
+    }
+    let parent = this.parent
+      , idx = this.remove();
+    return parent.insert(idx, node);
+  }
+
+  switchWithSibling(sibling) {
+    if (this.parent != sibling.parent) {
+      throw "[Node] Attempted to switch positions of non-sibling nodes.";
+    }
+    let idx = this.get_idx();
+    sibling.replaceWith(this);
+    this.parent.insert(idx, sibling);
+    return sibling;
+  }
 }
 
 Node.prototype.stringify = function() { return stringify(this) }
@@ -98,8 +125,7 @@ Node.prototype.validate = function() { return validate(this) }
 Node.prototype.insert_range = function(idx, nodes) { return Tree.insert_range(this, idx, nodes) }
 Node.prototype.append_range = function(nodes) { return Tree.append_range(this, nodes) }
 Node.prototype.remove_range = function(nodes) { return Tree.remove_range(nodes) }
-Node.prototype.replace_with = function(other) { return Tree.replace(this, other) }
-Node.prototype.switch_with_sibling = function(other) { return Tree.switch_siblings(this, other) }
+// Node.prototype.switch_with_sibling = function(other) { return Tree.switch_siblings(this, other) }
 Node.prototype.for_each = function(f) { return Tree.for_each(f, this) }
 Node.prototype.map = function(f) { return Tree.map(f, this) }
 Node.prototype.filter = function(f) { return Tree.filter(f, this) }

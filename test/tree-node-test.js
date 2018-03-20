@@ -98,6 +98,65 @@ exports['Node: single-node remove'] = function(test) {
   test.done();
 }
 
+exports["Node: replaceWith"] = function(test) {
+  var t0 = Tree.parse('[A]');
+  var n0 = new Node();
+  n0.value = "B";
+  t0.getChild([0]).replaceWith(n0);
+  test.equals(t0.stringify(), '[B]');
+  test.doesNotThrow(function(){Tree.validate(t0)});
+
+  var t1 = Tree.parse('[A[a,b],B]');
+  t1.getChild([0]).replaceWith(t1.getChild([0,1]));
+  test.equals(t1.stringify(), '[b,B]');
+  test.doesNotThrow(function(){Tree.validate(t1)});
+
+  var t2 = Tree.parse('[A,B]');
+  var t3 = Tree.parse('[C[a],D]');
+  t2.getChild([1]).replaceWith(t3.getChild([0]));
+  test.equals(t2.stringify(), '[A,C[a]]');
+  test.equals(t3.stringify(), '[D]');
+  test.doesNotThrow(function(){Tree.validate(t2)});
+  test.doesNotThrow(function(){Tree.validate(t3)});
+
+  var t4 = Tree.parse('[A,B]');
+  t4.getChild([0]).replaceWith(t4.getChild([0]));
+  test.equals(t4.stringify(), '[A,B]');
+  test.doesNotThrow(function(){Tree.validate(t4)});
+
+  test.done();
+}
+
+exports["Node: switchWithSibling"] = function(test) {
+  var t0 = Tree.parse('[A,B,C]');
+  t0.getChild([0]).switchWithSibling(t0.getChild([2]));
+  test.equals(t0.stringify(), '[C,B,A]');
+  test.doesNotThrow(function(){Tree.validate(t0)});
+
+  var t1 = Tree.parse('[A,B,C]');
+  t1.getChild([2]).switchWithSibling(t1.getChild([0]));
+  test.equals(t1.stringify(), '[C,B,A]');
+  test.doesNotThrow(function(){Tree.validate(t1)});
+
+  var t2 = Tree.parse('[A,B,C]');
+  t2.getChild([1]).switchWithSibling(t2.getChild([2]));
+  test.equals(t2.stringify(), '[A,C,B]');
+  test.doesNotThrow(function(){Tree.validate(t2)});
+
+  var t3 = Tree.parse('[A,B,C]');
+  t3.getChild([1]).switchWithSibling(t3.getChild([0]));
+  test.equals(Tree.stringify(t3), '[B,A,C]');
+  test.doesNotThrow(function(){Tree.validate(t3)});
+
+  var t4 = Tree.parse('[A[b]]');
+  test.throws(function() {t4.getChild([0]).switchWithSibling(t4.getChild([0,0]))});
+
+  var t5 = Tree.parse('[A]');
+  t5.getChild([0]).switchWithSibling(t5.getChild([0]));
+
+  test.done();
+}
+
 exports["Node: getChild"] = function(test) {
   var t1 = Tree.parse('[A,B[a,b],C,D[j[x,y,z[1,2]]]]');
 
