@@ -120,35 +120,6 @@ Tree.replace = function(n1, n2) {
 /// Will switch n1 with n2 if they have the same parent. Otherwise throws an exception.
 Tree.switch_siblings = function(n1, n2) {
   return n1.switchWithSibling(n2);
-  if (n1.parent != n2.parent) throw "Called switch_siblings on nodes that are no siblings!";
-  var p = n1.parent;
-  var idx1 = p.children.indexOf(n1);
-  var idx2 = p.children.indexOf(n2);
-  p.children[idx1] = n2;
-  p.children[idx2] = n1;
-  var h;
-  if (n1.rs == n2) {
-    if (n1.ls) n1.ls.rs = n2;
-    if (n2.rs) n2.rs.ls = n1;
-    n1.rs = n2.rs;
-    n2.ls = n1.ls;
-    n1.ls = n2;
-    n2.rs = n1;
-  } else if (n1.ls == n2) {
-    if (n1.rs) n1.rs.ls = n2;
-    if (n2.ls) n2.ls.rs = n1;
-    n1.ls = n2.ls;
-    n2.rs = n1.rs;
-    n1.rs = n2;
-    n2.ls = n1;
-  } else {
-    if (n1.ls) n1.ls.rs = n2;
-    if (n1.rs) n1.rs.ls = n2;
-    if (n2.ls) n2.ls.rs = n1;
-    if (n2.rs) n2.rs.ls = n1;
-    h = n1.ls; n1.ls = n2.ls; n2.ls = h;
-    h = n1.rs; n1.rs = n2.rs; n2.rs = h;
-  }
 }
 
 /// Returns the index of the passed node in its parent node or -1 if it does not
