@@ -6,6 +6,7 @@ import validate from "./validate.js";
 import clone from "./clone.js";
 import mapBetweenTrees from "./map.js";
 import oneToOneMapBetweenTrees from "./map-one-to-one.js";
+import DepthFirstTreeIterator from "./iterator-depth-first.js";
 
 /// To get all static methods of the Tree object as instance methods on your
 /// object, you can make it inherit from the "Tree.Node" class (use
@@ -179,6 +180,13 @@ export default class Node {
     return position;
   }
 
+  get iterator() {
+    return DepthFirstTreeIterator;
+  }
+
+  createIterator() {
+    return new (this.iterator)(this);
+  }
 }
 
 Node.prototype.stringify = function() { return stringify(this) }
