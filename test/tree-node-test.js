@@ -12,6 +12,18 @@ exports["Node: constructor"] = function(test) {
   test.done();
 }
 
+exports["Node: children"] = function(test) {
+  var node = new Node();
+
+  test.ok(!node.hasChildren());
+  node.children = new Node();
+  test.ok(node.hasChildren() && node.children.length === 1);
+  node.append(new Node());
+  test.ok(node.children.length === 2);
+
+  test.done();
+}
+
 exports["Node: position"] = function(test) {
   var t1 = Tree.parse('[A,B[a],C]');
 

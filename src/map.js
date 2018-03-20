@@ -25,8 +25,8 @@ export default function mapBetweenTrees(source_tree, target_tree) {
     if (source.id in map) throw "duplicate id in source tree";
     map[source.id] = [target];
     if (source.children.length !== target.children.length) {
-      if (!source.has_children()) map[source.id] = target.select_all();
-      else if (!target.has_children()) source.for_each(function(s) { map[s.id] = [target]});
+      if (!source.hasChildren()) map[source.id] = target.select_all();
+      else if (!target.hasChildren()) source.for_each(function(s) { map[s.id] = [target]});
       else throw "tree structures don't match";
     } else {
       for (var i=0; i<source.children.length; i++) mapfn(source.children[i], target.children[i]);

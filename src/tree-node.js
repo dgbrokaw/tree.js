@@ -1,5 +1,6 @@
 import Tree from "./tree.js";
 import id from "./helpers/id.js";
+import asArray from "./helpers/as-array.js";
 import stringify from "./stringify.js";
 import validate from "./validate.js";
 import clone from "./clone.js";
@@ -11,11 +12,22 @@ import oneToOneMapBetweenTrees from "./map-one-to-one.js";
 /// `new Tree.Node()` as the prototype).
 export default class Node {
   constructor() {
-    this.children = [];
+    this._children = [];
     this.parent = null;
     this.ls = null;
     this.rs = null;
     this.id = id();
+  }
+
+  hasChildren() {
+    return !!this._children && this._children.length > 0;
+  }
+
+  get children() {
+    return this._children;
+  }
+  set children(nodes) {
+    this._children = asArray(nodes);
   }
 
   /// Returns the index of the passed node in its parent node or -1 if it does not
@@ -166,6 +178,7 @@ export default class Node {
     range.forEach(node => node.parent = null);
     return position;
   }
+
 }
 
 Node.prototype.stringify = function() { return stringify(this) }
@@ -183,4 +196,3 @@ Node.prototype.select_first = function(f) { return Tree.select_first(f, this) }
 Node.prototype.get_leaf_nodes = function() { return Tree.get_leaf_nodes(this) }
 Node.prototype.get_by_value = function(value) { return Tree.get_by_value(value, this) }
 Node.prototype.get_by_id = function(id) { return Tree.get_by_id(id, this) }
-Node.prototype.has_children = function() { return this.children && this.children.length > 0 }
