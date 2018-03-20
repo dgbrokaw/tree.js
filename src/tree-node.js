@@ -18,11 +18,43 @@ export default class Node {
     this.id = id();
   }
 
+  get path() {
+    let path = [];
+    let node = this;
+    while (node.parent) {
+      path.unshift(node.parent.children.indexOf(node));
+      node = node.parent;
+    }
+    return path;
+  }
+
+  isRoot() {
+    return !this.parent;
+  }
+
+  /// Returns the tree that a node belongs to by following the .parent references. Returns
+  /// null if the top-most parent is not a Tree.
+  get root() {
+    let node = this;
+    while (node.parent) node = node.parent;
+    return node;
+  }
+
   getChild(path) {
     let node = this;
-    for (var i=0; i<path.length; i++) {
+    for (let i=0; i<path.length; i++) {
       if (!node.children || node.children.length <= path[i]) return null;
       node = node.children[path[i]];
+    }
+    return node;
+  }
+
+  getAncestor(level) {
+    let node = this;
+    if (!level) level = 0;
+    for (let i=0; i<level; i++) {
+      if (node.parent) node = node.parent;
+      else return null;
     }
     return node;
   }
@@ -46,8 +78,8 @@ export default class Node {
   }
 
   remove() {
-    var idx;
-    var siblings = this.parent.children;
+    let idx;
+    let siblings = this.parent.children;
     idx = siblings.indexOf(this);
     if (siblings[idx-1]) siblings[idx-1].rs = this.rs;
     if (siblings[idx+1]) siblings[idx+1].ls = this.ls;
@@ -68,8 +100,6 @@ Node.prototype.append_range = function(nodes) { return Tree.append_range(this, n
 Node.prototype.remove_range = function(nodes) { return Tree.remove_range(nodes) }
 Node.prototype.replace_with = function(other) { return Tree.replace(this, other) }
 Node.prototype.switch_with_sibling = function(other) { return Tree.switch_siblings(this, other) }
-Node.prototype.get_parent = function(level) { return Tree.get_parent(level, this) }
-Node.prototype.get_path = function() { return Tree.get_path(this) }
 Node.prototype.for_each = function(f) { return Tree.for_each(f, this) }
 Node.prototype.map = function(f) { return Tree.map(f, this) }
 Node.prototype.filter = function(f) { return Tree.filter(f, this) }
@@ -77,8 +107,6 @@ Node.prototype.filterRange = function(f, no_overlap) { return Tree.filterRange(f
 Node.prototype.select_all = function() { return Tree.select_all(this) }
 Node.prototype.select_first = function(f) { return Tree.select_first(f, this) }
 Node.prototype.get_leaf_nodes = function() { return Tree.get_leaf_nodes(this) }
-Node.prototype.is_root = function() { return Tree.is_root(this) }
-Node.prototype.get_root = function() { return Tree.get_root(this) }
 Node.prototype.get_by_value = function(value) { return Tree.get_by_value(value, this) }
 Node.prototype.get_by_id = function(id) { return Tree.get_by_id(id, this) }
 Node.prototype.has_children = function() { return this.children && this.children.length > 0 }

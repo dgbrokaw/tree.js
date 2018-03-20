@@ -171,22 +171,13 @@ Tree.get_child = function(path, node) {
 /// Safe way to get to a nodes anchestors. If a parent does not exist, it will
 /// return null.
 Tree.get_parent = function(level, node) {
-  for (var i=0; i<level; i++) {
-    if (node.parent) node = node.parent;
-    else return null;
-  }
-  return node;
+  return node.getAncestor(level);
 }
 
 /// Pass a node to get an array of children-indices from the root to the
 /// passed node. This is the inverse function to Tree.get_child.
 Tree.get_path = function(node) {
-  var path = [];
-  while (node.parent) {
-    path.unshift(node.parent.children.indexOf(node));
-    node = node.parent;
-  }
-  return path;
+  return node.path;
 }
 
 /// Calls the passed function for the passed node and all its descandents in depth-first order.
@@ -274,7 +265,7 @@ Tree.get_leaf_nodes = function(node) {
 
 /// Returns true if the node is top-level in the tree (its parent is the Tree object).
 Tree.is_root = function(node) {
-  return !node.parent;
+  return node.isRoot();
 }
 
 /// Returns true if the passed node array is a proper node range, which is the
@@ -286,11 +277,8 @@ Tree.is_range = function(nodes) {
   return true;
 }
 
-/// Returns the tree that a node belongs to by following the .parent references. Returns
-/// null if the top-most parent is not a Tree.
 Tree.get_root = function(node) {
-  while (node.parent) node = node.parent;
-  return node;
+  return node.root;
 }
 
 /// Returns an array of all nodes that have the passed value in their .value field. Seaches on
