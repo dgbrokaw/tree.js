@@ -27,6 +27,13 @@ exports["DepthFirstTreeIterator: traverse"] = function(test) {
   test.done();
 }
 
+exports["DepthFirstTreeIterator: traverse + test"] = function(test) {
+  var iterator = new DepthFirstTreeIterator(Tree.parse('O[A[A1,A2],B,C[C1[C11]]]'));
+  iterator.traverse(n => n.value, n => n.value[0] === "A");
+  test.deepEqual(iterator.result, ["A", "A1", "A2"]);
+  test.done();
+}
+
 exports["DepthFirstTreeIterator: select"] = function(test) {
   var iterator = new DepthFirstTreeIterator(Tree.parse('O[A[A1,A2],B,C[C1[C11]]]'));
   iterator.select(function(n) { return true });
