@@ -18,6 +18,13 @@ export default class Node {
     this.id = id();
   }
 
+  /// Returns the index of the passed node in its parent node or -1 if it does not
+  /// have a parent.
+  get position() {
+    if (this.parent) return this.parent.children.indexOf(this);
+    else return -1;
+  }
+
   get path() {
     let path = [];
     let node = this;
@@ -59,13 +66,13 @@ export default class Node {
     return node;
   }
 
-  insert(idx, child) {
-    child.ls = this.children[idx-1];
-    if (this.children[idx-1]) this.children[idx-1].rs = child;
-    child.rs = this.children[idx];
-    if (this.children[idx]) this.children[idx].ls = child;
+  insert(position, child) {
+    child.ls = this.children[position-1];
+    if (this.children[position-1]) this.children[position-1].rs = child;
+    child.rs = this.children[position];
+    if (this.children[position]) this.children[position].ls = child;
     child.parent = this;
-    this.children.splice(idx, 0, child);
+    this.children.splice(position, 0, child);
     return child;
   }
 
@@ -78,14 +85,14 @@ export default class Node {
   }
 
   remove() {
-    let idx;
+    let position;
     let siblings = this.parent.children;
-    idx = siblings.indexOf(this);
-    if (siblings[idx-1]) siblings[idx-1].rs = this.rs;
-    if (siblings[idx+1]) siblings[idx+1].ls = this.ls;
-    siblings.splice(idx,1);
+    position = siblings.indexOf(this);
+    if (siblings[position-1]) siblings[position-1].rs = this.rs;
+    if (siblings[position+1]) siblings[position+1].ls = this.ls;
+    siblings.splice(position,1);
     this.parent = null;
-    return idx;
+    return position;
   }
 
   /// Replaces this node with the passed node by removing itself and inserting
@@ -101,17 +108,17 @@ export default class Node {
       node.remove();
     }
     let parent = this.parent
-      , idx = this.remove();
-    return parent.insert(idx, node);
+      , position = this.remove();
+    return parent.insert(position, node);
   }
 
   switchWithSibling(sibling) {
     if (this.parent != sibling.parent) {
       throw "[Node] Attempted to switch positions of non-sibling nodes.";
     }
-    let idx = this.get_idx();
+    let position = this.position;
     sibling.replaceWith(this);
-    this.parent.insert(idx, sibling);
+    this.parent.insert(position, sibling);
     return sibling;
   }
 }
@@ -122,10 +129,9 @@ Node.prototype.get_mapping_to = function(target) { return mapBetweenTrees(this, 
 Node.prototype.get_1to1_mapping_to = function(target, strict) { return oneToOneMapBetweenTrees(this, target, strict) }
 Node.prototype.validate = function() { return validate(this) }
 
-Node.prototype.insert_range = function(idx, nodes) { return Tree.insert_range(this, idx, nodes) }
+Node.prototype.insert_range = function(position, nodes) { return Tree.insert_range(this, position, nodes) }
 Node.prototype.append_range = function(nodes) { return Tree.append_range(this, nodes) }
 Node.prototype.remove_range = function(nodes) { return Tree.remove_range(nodes) }
-// Node.prototype.switch_with_sibling = function(other) { return Tree.switch_siblings(this, other) }
 Node.prototype.for_each = function(f) { return Tree.for_each(f, this) }
 Node.prototype.map = function(f) { return Tree.map(f, this) }
 Node.prototype.filter = function(f) { return Tree.filter(f, this) }
@@ -136,4 +142,3 @@ Node.prototype.get_leaf_nodes = function() { return Tree.get_leaf_nodes(this) }
 Node.prototype.get_by_value = function(value) { return Tree.get_by_value(value, this) }
 Node.prototype.get_by_id = function(id) { return Tree.get_by_id(id, this) }
 Node.prototype.has_children = function() { return this.children && this.children.length > 0 }
-Node.prototype.get_idx = function() { return Tree.get_idx(this) }

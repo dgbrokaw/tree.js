@@ -12,6 +12,21 @@ exports["Node: constructor"] = function(test) {
   test.done();
 }
 
+exports["Node: position"] = function(test) {
+  var t1 = Tree.parse('[A,B[a],C]');
+
+  test.equals(t1.getChild([0]).position, 0);
+  test.equals(t1.getChild([2]).position, 2);
+  test.equals(t1.getChild([1,0]).position, 0);
+  test.equals(t1.position, -1);
+
+  var c = t1.getChild([1]);
+  c.remove();
+  test.equals(c.position, -1);
+
+  test.done();
+}
+
 exports["Node: path"] = function(test) {
   var tree = Tree.parse('[A,B[a,b],C,D[j[x,y,z[1,2]]]]');
 

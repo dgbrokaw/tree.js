@@ -125,8 +125,7 @@ Tree.switch_siblings = function(n1, n2) {
 /// Returns the index of the passed node in its parent node or -1 if it does not
 /// have a parent.
 Tree.get_idx = function(node) {
-  if (node.parent) return node.parent.children.indexOf(node);
-  else return -1;
+  return node.position;
 }
 
 /// Pass the parent node and then a sequence of children indices to get a specific
