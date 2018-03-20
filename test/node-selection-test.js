@@ -89,7 +89,7 @@ exports["NodeSelection: ranges"] = function(test) {
   test.equals(r5[0], t1.children[1]);
 
   var t2 = Tree.parse('[A[a,b,c,d]]');
-  var sel6 = new NodeSelection([t2.get_child([0,0]), t2.get_child([0,2])]);
+  var sel6 = new NodeSelection([Tree.get_child([0,0], t2), Tree.get_child([0,2], t2)]);
   var r6 = sel6.range;
   test.equals(r6.length, 3);
 

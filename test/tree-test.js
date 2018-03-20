@@ -196,11 +196,6 @@ exports['insert'] = function(test) {
   test.equals(Tree.stringify(t1), '[A,AB,B]');
   test.doesNotThrow(function(){Tree.validate(t1)});
 
-  var t1b = Tree.parse('[A,B]');
-  t1b.insert(1, {value: 'AB'});
-  test.equals(Tree.stringify(t1b), '[A,AB,B]');
-  test.doesNotThrow(function(){Tree.validate(t1b)});
-
   test.done();
 }
 
@@ -214,11 +209,6 @@ exports['append'] = function(test) {
   Tree.append(t1.children[0], {value: 'c'});
   test.equals(Tree.stringify(t1), '[A[a,b,c],B]');
   test.doesNotThrow(function(){Tree.validate(t1)});
-
-  var t1b = Tree.parse('[A[a,b],B]');
-  t1b.children[0].append({value: 'c'});
-  test.equals(Tree.stringify(t1b), '[A[a,b,c],B]');
-  test.doesNotThrow(function(){Tree.validate(t1b)});
 
   test.done();
 }
@@ -244,11 +234,6 @@ exports['remove'] = function(test) {
   idx = Tree.remove(t2.children[1].children[1]);
   test.equals(Tree.stringify(t2), '[A,B[a],C]');
   test.doesNotThrow(function(){Tree.validate(t2)});
-
-  var t2b = Tree.parse('[A,B[a,b],C]')
-  idx = t2b.children[1].children[1].remove();
-  test.equals(Tree.stringify(t2b), '[A,B[a],C]');
-  test.doesNotThrow(function(){Tree.validate(t2b)});
 
   test.done();
 }
@@ -542,7 +527,7 @@ exports['get_1to1_mapping_between'] = function(test) {
   var n1 = Tree.parse('O[A,B[1,2],C]');
   var c1 = Tree.parse('O[A,B[1,2],C]');
   var mappings = n1.map(function(node) {
-    return {id: node.id, target: c1.get_child(node.get_path())};
+    return {id: node.id, target: Tree.get_child(node.get_path(), c1)};
   });
   map = n1.get_1to1_mapping_to(c1);
   mappings.forEach(function(mapping) {
@@ -602,7 +587,7 @@ exports['get_mapping_between'] = function(test) {
   var n1 = Tree.parse('O[A,B[1,2],C]');
   var c1 = Tree.parse('O[A,B[1,2],C]');
   var mappings = n1.map(function(node) {
-    return {id: node.id, target: c1.get_child(node.get_path())};
+    return {id: node.id, target: Tree.get_child(node.get_path(), c1)};
   });
   map = n1.get_mapping_to(c1);
   mappings.forEach(function(mapping) {
@@ -691,7 +676,6 @@ exports['get_child'] = function(test){
   test.equals(Tree.get_child([1],t1).value, 'B')
   test.equals(Tree.get_child([1, 1],t1).value, 'b')
   test.equals(Tree.get_child([3,0,2,1],t1).value, '2')
-  test.equals(t1.get_child([3,0,2,1]).value, '2')
   test.equals(Tree.get_child([4],t1), null);
   test.equals(Tree.get_child([1,3],t1), null);
   test.equals(Tree.get_child([1,0,0],t1), null);
@@ -701,7 +685,7 @@ exports['get_child'] = function(test){
 
 exports['get_parent'] = function(test){
   var t1 = Tree.parse('[A,B[a,b],C,D[j[x,y,z[1,2]]]]')
-  var n = t1.get_child([3,0,2,1]);
+  var n = Tree.get_child([3,0,2,1], t1);
   test.equals(Tree.get_parent(0, n).value, '2');
   test.equals(n.get_parent(1).value, 'z');
   test.equals(n.get_parent(2).value, 'j');
@@ -719,7 +703,7 @@ exports['get_path'] = function(test){
   test.deepEqual(Tree.get_path(t1.children[1]), [1])
   test.deepEqual(Tree.get_path(t1.children[1].children[1]), [1,1])
   test.deepEqual(Tree.get_path(Tree.get_child([3,0,2,1],t1)), [3,0,2,1])
-  test.deepEqual(t1.get_child([3,0,2,1]).get_path(), [3,0,2,1])
+  test.deepEqual(Tree.get_child([3,0,2,1], t1).get_path(), [3,0,2,1])
   test.deepEqual(Tree.get_path('blubb'), []);
 
   test.done()
@@ -769,7 +753,7 @@ exports['nodes_to_range'] = function (test) {
   test.equals(r5[0], t1.children[1]);
 
   var t2 = Tree.parse('[A[a,b,c,d]]');
-  var r6 = Tree.nodes_to_range([t2.get_child([0,0]), t2.get_child([0,2])]);
+  var r6 = Tree.nodes_to_range([Tree.get_child([0,0], t2), Tree.get_child([0,2], t2)]);
   test.equals(r6.length, 3);
 
   var t3 = Tree.parse('[a,b,c,d,e,f]');

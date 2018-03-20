@@ -18,6 +18,15 @@ export default class Node {
     this.id = id();
   }
 
+  getChild(path) {
+    let node = this;
+    for (var i=0; i<path.length; i++) {
+      if (!node.children || node.children.length <= path[i]) return null;
+      node = node.children[path[i]];
+    }
+    return node;
+  }
+
   insert(idx, child) {
     child.ls = this.children[idx-1];
     if (this.children[idx-1]) this.children[idx-1].rs = child;
@@ -26,6 +35,25 @@ export default class Node {
     child.parent = this;
     this.children.splice(idx, 0, child);
     return child;
+  }
+
+  append(child) {
+    return this.insert(this.children.length, child);
+  }
+
+  prepend(child) {
+    return this.insert(0, child);
+  }
+
+  remove() {
+    var idx;
+    var siblings = this.parent.children;
+    idx = siblings.indexOf(this);
+    if (siblings[idx-1]) siblings[idx-1].rs = this.rs;
+    if (siblings[idx+1]) siblings[idx+1].ls = this.ls;
+    siblings.splice(idx,1);
+    this.parent = null;
+    return idx;
   }
 }
 
@@ -37,12 +65,9 @@ Node.prototype.validate = function() { return validate(this) }
 
 Node.prototype.insert_range = function(idx, nodes) { return Tree.insert_range(this, idx, nodes) }
 Node.prototype.append_range = function(nodes) { return Tree.append_range(this, nodes) }
-Node.prototype.append = function(node) { return Tree.append(this, node) }
-Node.prototype.remove = function() { return Tree.remove(this) }
 Node.prototype.remove_range = function(nodes) { return Tree.remove_range(nodes) }
 Node.prototype.replace_with = function(other) { return Tree.replace(this, other) }
 Node.prototype.switch_with_sibling = function(other) { return Tree.switch_siblings(this, other) }
-Node.prototype.get_child = function(path) { return Tree.get_child(path, this) }
 Node.prototype.get_parent = function(level) { return Tree.get_parent(level, this) }
 Node.prototype.get_path = function() { return Tree.get_path(this) }
 Node.prototype.for_each = function(f) { return Tree.for_each(f, this) }

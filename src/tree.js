@@ -85,26 +85,13 @@ Tree.filterRange = function(selector, node, no_overlap) {
 
 /// Inserts a node into the tree as the last child of 'parent'. Returns the inserted node.
 Tree.append = function(parent, node) {
-  var last = parent.children[parent.children.length-1];
-  if (last) last.rs = node;
-  node.ls = last;
-  node.rs = null;
-  node.parent = parent;
-  parent.children.push(node);
-  return node;
+  return parent.append(node);
 }
 
 /// Removes the passed node from the tree and returns its previous index. Sets
 /// node.parent to null.
 Tree.remove = function(node) {
-  var idx;
-  var siblings = node.parent.children;
-  idx = siblings.indexOf(node);
-  if (siblings[idx-1]) siblings[idx-1].rs = node.rs;
-  if (siblings[idx+1]) siblings[idx+1].ls = node.ls;
-  siblings.splice(idx,1);
-  node.parent = null;
-  return idx;
+  return node.remove();
 }
 
 /// Removes a range of nodes from the tree and returns the index of the first node if
@@ -178,6 +165,7 @@ Tree.get_idx = function(node) {
 /// child. E.g. for `[A[B,C[D]]]`, Tree.get(t, [0, 1, 0]) will return node `D`.
 /// If the path does not exist, the method returns null.
 Tree.get_child = function(path, node) {
+  return node.getChild(path);
   for (var i=0; i<path.length; i++) {
     if (!node.children || node.children.length <= path[i]) return null;
     node = node.children[path[i]];
