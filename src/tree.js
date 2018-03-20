@@ -166,11 +166,6 @@ Tree.get_idx = function(node) {
 /// If the path does not exist, the method returns null.
 Tree.get_child = function(path, node) {
   return node.getChild(path);
-  for (var i=0; i<path.length; i++) {
-    if (!node.children || node.children.length <= path[i]) return null;
-    node = node.children[path[i]];
-  }
-  return node;
 }
 
 /// Safe way to get to a nodes anchestors. If a parent does not exist, it will
