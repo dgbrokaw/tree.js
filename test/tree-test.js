@@ -122,11 +122,6 @@ exports['insert_range'] = function(test) {
   test.equals(Tree.stringify(t1), '[A,b,c,B]');
   test.doesNotThrow(function(){Tree.validate(t1)});
 
-  var t1b = Tree.parse('[A,B]');
-  t1b.insert_range(1, Tree.parse('[a,b,c]').children.slice(1,3));
-  test.equals(t1b.stringify(), '[A,b,c,B]');
-  test.doesNotThrow(function(){t1b.validate()});
-
   var t2 = Tree.parse('[A,B]');
   Tree.insert_range(t2, 1, []);
   test.equals(Tree.stringify(t2), '[A,B]');
@@ -145,11 +140,6 @@ exports['append_range'] = function(test) {
   Tree.append_range(t1, Tree.parse('[a,b,c]').children.slice(1,3));
   test.equals(Tree.stringify(t1), '[A,B,b,c]');
   test.doesNotThrow(function(){Tree.validate(t1)});
-
-  var t1b = Tree.parse('[A,B]');
-  t1b.append_range(Tree.parse('[a,b,c]').children.slice(1,3));
-  test.equals(t1b.stringify(), '[A,B,b,c]');
-  test.doesNotThrow(function(){t1b.validate()});
 
   var t2 = Tree.parse('[A,B]');
   Tree.append_range(t2, []);
@@ -175,12 +165,6 @@ exports['remove_range'] = function(test) {
   test.equals(Tree.stringify(t2), '[D]');
   test.equals(idx, 0);
   test.doesNotThrow(function(){Tree.validate(t2)});
-
-  var t2b = Tree.parse('[A,B[a,b],C,D]');
-  idx = t2b.remove_range(t2b.children.slice(0,3));
-  test.equals(t2b.stringify(), '[D]');
-  test.equals(idx, 0);
-  test.doesNotThrow(function(){t2b.validate()});
 
   test.done();
 }

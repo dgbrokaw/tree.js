@@ -21,8 +21,10 @@ export default class Node {
   /// Returns the index of the passed node in its parent node or -1 if it does not
   /// have a parent.
   get position() {
-    if (this.parent) return this.parent.children.indexOf(this);
-    else return -1;
+    if (!this.parent) {
+      throw "[Node] Attempted to find position of node which has no parent.";
+    }
+    return this.parent.children.indexOf(this);
   }
 
   get path() {
@@ -66,6 +68,13 @@ export default class Node {
     return node;
   }
 
+  get siblings() {
+    if (!this.parent) {
+      throw "[Node] Attempted to get siblings of node which has no parent.";
+    }
+    return this.parent.children;
+  }
+
   insert(position, child) {
     child.ls = this.children[position-1];
     if (this.children[position-1]) this.children[position-1].rs = child;
@@ -85,12 +94,11 @@ export default class Node {
   }
 
   remove() {
-    let position;
-    let siblings = this.parent.children;
-    position = siblings.indexOf(this);
+    let position = this.position;
+    let siblings = this.siblings;
     if (siblings[position-1]) siblings[position-1].rs = this.rs;
     if (siblings[position+1]) siblings[position+1].ls = this.ls;
-    siblings.splice(position,1);
+    siblings.splice(position, 1);
     this.parent = null;
     return position;
   }
@@ -113,6 +121,9 @@ export default class Node {
   }
 
   switchWithSibling(sibling) {
+    if (!this.parent || !sibling.parent) {
+      throw "[Node] Attempted to switch positions of nodes which have no parent.";
+    }
     if (this.parent != sibling.parent) {
       throw "[Node] Attempted to switch positions of non-sibling nodes.";
     }
@@ -120,6 +131,40 @@ export default class Node {
     sibling.replaceWith(this);
     this.parent.insert(position, sibling);
     return sibling;
+  }
+
+  insertRange(position, range) {
+    if (range.length === 0) {
+      throw "[Node] Attempted to insert empty range into tree.";
+    }
+    range[0].ls = this.children[position-1];
+    if (this.children[position-1]) this.children[position-1].rs = range[0];
+    range[range.length-1].rs = this.children[position];
+    if (this.children[position]) this.children[position].ls = range[range.length-1];
+    for (var i=0; i<range.length; i++) range[i].parent = this;
+    this.children = this.children.slice(0,position).concat(range, this.children.slice(position));
+    return range;
+  }
+
+  appendRange(range) {
+    return this.insertRange(this.children.length, range);
+  }
+
+  prependRange(range) {
+    return this.insertRange(0, range);
+  }
+
+  removeRange(range) {
+    if (range.length === 0) {
+      throw "[Node] Attempted to remove empty range from node's children.";
+    }
+    let position = range[0].position;
+    let siblings = range[0].siblings;
+    if (siblings[position-1]) siblings[position-1].rs = range[range.length-1].rs;
+    if (siblings[position+range.length]) siblings[position+range.length].ls = range[0].ls;
+    siblings.splice(position, range.length);
+    range.forEach(node => node.parent = null);
+    return position;
   }
 }
 
@@ -129,9 +174,6 @@ Node.prototype.get_mapping_to = function(target) { return mapBetweenTrees(this, 
 Node.prototype.get_1to1_mapping_to = function(target, strict) { return oneToOneMapBetweenTrees(this, target, strict) }
 Node.prototype.validate = function() { return validate(this) }
 
-Node.prototype.insert_range = function(position, nodes) { return Tree.insert_range(this, position, nodes) }
-Node.prototype.append_range = function(nodes) { return Tree.append_range(this, nodes) }
-Node.prototype.remove_range = function(nodes) { return Tree.remove_range(nodes) }
 Node.prototype.for_each = function(f) { return Tree.for_each(f, this) }
 Node.prototype.map = function(f) { return Tree.map(f, this) }
 Node.prototype.filter = function(f) { return Tree.filter(f, this) }

@@ -32,30 +32,16 @@ Tree.insert = function(parent, idx, child) {
 /// of the node `parent`. The `nodes` array must contain a list of direct
 /// siblings ordered from left to right.
 Tree.insert_range = function(parent, idx, nodes) {
-  var N=nodes.length;
-  if (N===0) return;
-  nodes[0].ls = parent.children[idx-1];
-  if (parent.children[idx-1]) parent.children[idx-1].rs = nodes[0];
-  nodes[N-1].rs = parent.children[idx];
-  if (parent.children[idx]) parent.children[idx].ls = nodes[N-1];
-  for (var i=0; i<N; i++) nodes[i].parent = parent;
-  parent.children = parent.children.slice(0,idx).concat(nodes, parent.children.slice(idx));
-  return nodes;
+  if (nodes.length === 0) return;
+  parent.insertRange(idx, nodes);
 }
 
 /// Appends a range of nodes to the end of the children array of the node `parent`.
 /// The `nodes` array must contain a list of direct siblings ordered from left to right.
 /// Returns the inserted node range.
 Tree.append_range = function(parent, nodes) {
-  var N=nodes.length;
-  if (N===0) return;
-  var last = parent.children[parent.children.length-1];
-  if (last) last.rs = nodes[0];
-  nodes[0].ls = last;
-  nodes[N-1].rs = null;
-  for (var i=0; i<N; i++) nodes[i].parent = parent;
-  parent.children = parent.children.concat(nodes);
-  return nodes;
+  if (nodes.length === 0) return;
+  parent.appendRange(nodes);
 }
 
 /// Returns an array of all node ranges for which the passed selector function
@@ -98,15 +84,8 @@ Tree.remove = function(node) {
 /// nodes contained more than zero nodes. The `nodes` array must contain a list of direct
 /// siblings ordered from left to right. Sets the removed nodes' parent link to null.
 Tree.remove_range = function(nodes) {
-  var N = nodes.length;
-  if (N === 0) return;
-  var siblings = nodes[0].parent.children;
-  var idx = siblings.indexOf(nodes[0]);
-  if (siblings[idx-1]) siblings[idx-1].rs = nodes[N-1].rs;
-  if (siblings[idx+N]) siblings[idx+N].ls = nodes[0].ls;
-  siblings.splice(idx,N);
-  for (var i=0; i<nodes.length; i++) nodes[i].parent = null;
-  return idx;
+  if (nodes.length === 0 || !nodes[0].parent) return;
+  return nodes[0].parent.removeRange(nodes);
 }
 
 /// Replaces n1 with n2 by removing n1 and inserting n2 at n1's old position. If n2 was part of a
@@ -125,6 +104,7 @@ Tree.switch_siblings = function(n1, n2) {
 /// Returns the index of the passed node in its parent node or -1 if it does not
 /// have a parent.
 Tree.get_idx = function(node) {
+  if (!node.parent) return -1;
   return node.position;
 }
 

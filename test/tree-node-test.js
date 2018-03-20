@@ -18,14 +18,32 @@ exports["Node: position"] = function(test) {
   test.equals(t1.getChild([0]).position, 0);
   test.equals(t1.getChild([2]).position, 2);
   test.equals(t1.getChild([1,0]).position, 0);
-  test.equals(t1.position, -1);
+  test.throws(function(){t1.position});
 
   var c = t1.getChild([1]);
   c.remove();
-  test.equals(c.position, -1);
+  test.throws(function(){c.position});
 
   test.done();
 }
+
+// exports["Node: firstChild & lastChild"] = function(test) {
+//   var t1 = Tree.parse('A');
+//   test.equals(t1.firstChild, null);
+//
+//   var t2 = Tree.parse('[A]');
+//   test.equals(t2.firstChild.stringify(), "A");
+//   test.equals(t2.lastChild.stringify(), "A");
+//
+//   var t3 = Tree.parse("[A,B]");
+//   test.equals(t3.firstChild.stringify(), "A");
+//   test.equals(t3.lastChild.stringify(), "B");
+//
+//   var t4 = Tree.parse("[A,B,C]");
+//   test.equals(t4.lastChild.stringify(), "C");
+//
+//   test.done();
+// }
 
 exports["Node: path"] = function(test) {
   var tree = Tree.parse('[A,B[a,b],C,D[j[x,y,z[1,2]]]]');
@@ -169,6 +187,9 @@ exports["Node: switchWithSibling"] = function(test) {
   var t5 = Tree.parse('[A]');
   t5.getChild([0]).switchWithSibling(t5.getChild([0]));
 
+  var t6 = Tree.parse("A,B");
+  test.throws(function(){t6[0].switchWithSibling(t6[1])});
+
   test.done();
 }
 
@@ -197,6 +218,58 @@ exports["Node: getAncestor"] = function(test) {
   test.equals(n.getAncestor(3).value, 'D');
   test.equals(n.getAncestor(4).value, '');
   test.equals(n.getAncestor(5), null);
+
+  test.done();
+}
+
+exports["Node: insertRange"] = function(test) {
+  var t0 = Tree.parse('');
+  t0.insertRange(0, Tree.parse('[a,b]').children);
+  test.equals(t0.stringify(), '[a,b]');
+  test.doesNotThrow(function(){Tree.validate(t0)});
+
+  var t0b = Tree.parse('');
+  t0b.prependRange(Tree.parse('[a,b]').children);
+  test.equals(t0b.stringify(), '[a,b]');
+  test.doesNotThrow(function(){Tree.validate(t0b)});
+
+  var t0c = Tree.parse('');
+  t0c.appendRange(Tree.parse('[a,b]').children);
+  test.equals(t0c.stringify(), '[a,b]');
+  test.doesNotThrow(function(){Tree.validate(t0c)});
+
+  var t1 = Tree.parse('[A,B]');
+  t1.insertRange(1, Tree.parse('[a,b,c]').children.slice(1,3));
+  test.equals(t1.stringify(), '[A,b,c,B]');
+  test.doesNotThrow(function(){Tree.validate(t1)});
+
+  var t2 = Tree.parse('[A,B]');
+  test.throws(function(){t1.insertRange(1, [])});
+  test.equals(t2.stringify(), '[A,B]');
+  test.doesNotThrow(function(){Tree.validate(t2)});
+
+  var t3 = Tree.parse('[A,B]');
+  t3.insertRange(2, Tree.parse('[a,b,c]').children.slice(1,3));
+  test.equals(t3.stringify(), '[A,B,b,c]');
+  test.doesNotThrow(function(){Tree.validate(t3)});
+
+  test.done();
+}
+
+exports["Node: removeRange"] = function(test) {
+  var t1 = Tree.parse('[A,B,C]');
+  var n = t1.children[1];
+  var position = t1.removeRange([n]);
+  test.equals(t1.stringify(), '[A,C]');
+  test.equals(position, 1);
+  test.equals(n.parent, null);
+  test.doesNotThrow(function(){Tree.validate(t1)});
+
+  var t2 = Tree.parse('[A,B[a,b],C,D]');
+  position = t2.removeRange(t2.children.slice(0,3));
+  test.equals(t2.stringify(), '[D]');
+  test.equals(position, 0);
+  test.doesNotThrow(function(){Tree.validate(t2)});
 
   test.done();
 }
