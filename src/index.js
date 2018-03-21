@@ -26,4 +26,6 @@ Tree.get_1to1_mapping_between = oneToOneMapBetweenTrees;
 
 import NodeSelection from "./node-selection.js";
 
-export { Tree, Node, NodeSelection };
+import DepthFirstTreeIterator from "./iterator-depth-first.js";
+
+export { Tree, Node, NodeSelection, DepthFirstTreeIterator };

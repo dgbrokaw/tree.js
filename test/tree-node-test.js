@@ -285,3 +285,9 @@ exports["Node: removeRange"] = function(test) {
 
   test.done();
 }
+
+exports["Node: iterator"] = function(test) {
+  var node = new Node();
+  test.ok(node.createIterator() instanceof node.iterator)
+  test.done();
+}

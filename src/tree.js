@@ -10,6 +10,8 @@ Most of the methods can accept both a single node or an array of nodes to work o
 */
 import Node from "./tree-node.js";
 import NodeSelection from "./node-selection.js";
+import DepthFirstTreeIterator from "./iterator-depth-first.js";
+import * as iteration from "./iteration.js";
 
 var Tree = { version: '1.3.7' };
 
@@ -49,24 +51,7 @@ Tree.append_range = function(parent, nodes) {
 /// If no_overlap is set to true, the function will not search children of a
 /// successful match and will not include any nodes used in a successful match again.
 Tree.filterRange = function(selector, node, no_overlap) {
-  var result = [];
-  var nodes = Array.isArray(node) ? node : [node];
-  var f = function(nodes, idx) {
-    var range = [], n = nodes[idx];
-    for (var i=idx; i<nodes.length; i++) {
-      range.push(nodes[i]);
-      if (selector(range)) {
-        result.push(range.slice());
-        if (no_overlap) return i-idx;
-      }
-    }
-    if (n.children) {
-      for (var i=0; i<n.children.length; i++) i += f(n.children, i);
-    }
-    return 0;
-  }
-  for (var i=0; i<nodes.length; i++) i += f(nodes, i);
-  return result;
+  return iteration.filterRange(selector, node, no_overlap);
 }
 
 /// Inserts a node into the tree as the last child of 'parent'. Returns the inserted node.
@@ -130,74 +115,34 @@ Tree.get_path = function(node) {
 /// Calls the passed function for the passed node and all its descandents in depth-first order.
 /// Node can either be a single node or an array of nodes.
 Tree.for_each = function(f, node) {
-  var nodes = Array.isArray(node) ? node : [node];
-  var traverse = function(node) {
-    f(node);
-    if (node.children) for (var i=0; i<node.children.length; i++) traverse(node.children[i]);
-  }
-  for (var i=0; i<nodes.length; i++) traverse(nodes[i]);
+  iteration.forEach(f, node);
 }
 
 /// Calls the passed function for each of the passed nodes and their children, depth-first.
 /// The results are stored in an array that is returned. Node can either be a single node or
 /// an array of nodes.
 Tree.map = function(f, node) {
-  var nodes = Array.isArray(node) ? node : [node];
-  var res = [];
-  var traverse = function(node) {
-    res.push(f(node));
-    if (node.children) for (var i=0; i<node.children.length; i++) traverse(node.children[i]);
-  }
-  for (var i=0; i<nodes.length; i++) traverse(nodes[i]);
-  return res;
+  return iteration.map(f, node);
 }
 
 /// Returns an array of all nodes for which the passed selector function returned true. Traverses
 /// the nodes depth-first. The passed node can either be a single node or an array of nodes.
 Tree.filter = function(selector, node) {
-  var result = [];
-  var nodes = Array.isArray(node) ? node : [node];
-  var f = function(node) {
-    if (selector(node)) result.push(node);
-    if (node.children) for (var i=0; i<node.children.length; i++) f(node.children[i]);
-  }
-  for (var i=0; i<nodes.length; i++) f(nodes[i]);
-  return result;
+  return iteration.filter(selector, node);
 }
 
 /// Returns an array of all nodes in the tree of the passed root node. The root node is included.
 /// Traverses the nodes depth-first. The passed node can either be a single node or an array of
 /// nodes.
 Tree.select_all = function(node) {
-  return Tree.filter(function() { return true }, node);
+  return iteration.getAllNodes(node);
 }
 
 /// Returns the first node in the passed node or its decandents for that the selector function
 /// returns true. Traverses depth-first. Node can either be a single node or an array of nodes.
 /// If no nodes matches, returns null.
 Tree.select_first = function(selector, node) {
-  var f = function(node) {
-    var curr = node;
-    for (;;) {
-      if (selector(curr)) return curr;
-      if (curr.children && curr.children[0]) {
-        curr = curr.children[0];
-        continue;
-      }
-      if (curr === node) return null;
-      while (!curr.rs) {
-        curr = curr.parent;
-        if (curr === node) return null;
-      }
-      curr = curr.rs;
-    }
-  }
-  var nodes = Array.isArray(node) ? node : [node];
-  for (var i=0; i<nodes.length; i++) {
-    var n = f(nodes[i]);
-    if (n) return n;
-  }
-  return null;
+  return iteration.select(selector, node);
 }
 
 /// Returns the closest common ancestor of the passed nodes.
@@ -207,7 +152,7 @@ Tree.get_cca = function(nodes) {
 
 /// Returns an array of all leaf nodes of the node array or single node passed.
 Tree.get_leaf_nodes = function(node) {
-  return Tree.filter(function(n) { return !(n.children && n.children.length) }, node);
+  return iteration.getLeafNodes(node);
 }
 
 /// Returns true if the node is top-level in the tree (its parent is the Tree object).
@@ -228,11 +173,11 @@ Tree.get_root = function(node) {
 /// Returns an array of all nodes that have the passed value in their .value field. Seaches on
 /// the passed array of nodes or single node depth-first.
 Tree.get_by_value = function(value, node) {
-  return Tree.filter(function(n) { return n.value === value}, node);
+  return iteration.filterByValue(value, node);
 }
 
 /// Returns the first node with the passed id or null if no node has the id. Seaches on
 /// the passed array of nodes or single node depth-first.
 Tree.get_by_id = function(id, node) {
-  return Tree.select_first(function (n) { return n.id === id }, node);
+  return iteration.selectById(id, node);
 }
