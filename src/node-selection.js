@@ -23,7 +23,7 @@ export default class NodeSelection {
 
   // Returns the closest common ancestor of the selected nodes.
   get closestCommonAncestor() {
-    return ccaHelper(this.sel).closestCommonAncestor;
+    return ccaHelper(this._selection).closestCommonAncestor;
   }
   // Shorthand for "closestCommonAncestor."
   get cca() {
