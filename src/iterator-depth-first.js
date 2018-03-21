@@ -23,26 +23,26 @@ export default class DepthFirstTreeIterator {
   // Processed nodes that result in "undefined" are excluded from the result.
   traverse(process, test) {
     this.start();
-    var result = this.result;
+    let result = this.result;
 
-    var f = function(node) {
+    let f = function(node) {
       if (!test || test(node)) {
         if (!process) {
           result.push(node);
         }
         else {
-          var nodeResult = process(node);
-          if (nodeResult !== undefined) result.push(process(node));
+          let nodeResult = process(node);
+          if (nodeResult !== undefined) result.push(nodeResult);
         }
       }
       if (node.hasChildren()) {
-        for (var i=0; i<node.children.length; i++) {
+        for (let i=0; i<node.children.length; i++) {
           f(node.children[i]);
         }
       }
     }
 
-    for (var i=0; i<this.trees.length; i++) {
+    for (let i=0; i<this.trees.length; i++) {
       f(this.trees[i]);
     }
 
@@ -55,8 +55,8 @@ export default class DepthFirstTreeIterator {
   select(selector) {
     this.start();
 
-    var f = function(node) {
-      var curr = node;
+    let f = function(node) {
+      let curr = node;
       for (;;) {
         if (selector(curr)) return curr;
         if (curr.children && curr.children[0]) {
@@ -72,8 +72,8 @@ export default class DepthFirstTreeIterator {
       }
     }
 
-    for (var i=0; i<this.trees.length; i++) {
-      var node = f(this.trees[i]);
+    for (let i=0; i<this.trees.length; i++) {
+      let node = f(this.trees[i]);
       if (node) {
         this.result = [node];
         return node;
@@ -81,5 +81,39 @@ export default class DepthFirstTreeIterator {
     }
 
     return null;
+  }
+
+  traverseRange(process, test, noOverlap) {
+    this.start();
+    let result = this.result;
+
+    let f = function(nodes, idx) {
+      let range = [], n = nodes[idx];
+      for (let i=idx; i<nodes.length; i++) {
+        range.push(nodes[i]);
+        if (!test || test(range)) {
+          if (!process) {
+            result.push(range.slice());
+          }
+          else {
+            let rangeResult = process(range);
+            if (rangeResult !== undefined) result.push(rangeResult);
+          }
+          if (noOverlap) {
+            return i-idx;
+          }
+        }
+      }
+      if (n.hasChildren()) {
+        for (let i=0; i<n.children.length; i++) i += f(n.children, i);
+      }
+      return 0;
+    }
+
+    for (let i=0; i<this.trees.length; i++) {
+      i += f(this.trees, i);
+    }
+
+    return this.result;
   }
 }

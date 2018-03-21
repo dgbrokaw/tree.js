@@ -42,3 +42,30 @@ exports["DepthFirstTreeIterator: select"] = function(test) {
   test.equal(iterator.result[0].value, "B");
   test.done();
 }
+
+exports["DepthFirstTreeIterator: traverseRange"] = function(test) {
+  var iterator = new DepthFirstTreeIterator(Tree.parse('O[A[A1,A2],B,C[C1[C11]]]'));
+
+  iterator.traverseRange(r => r.map(n => n.value), null, true);
+  test.deepEqual(iterator.result, [['O']]);
+
+  iterator.traverseRange(r => r.map(n => n.value), null);
+  test.deepEqual(iterator.result, [ [ 'O' ],
+    [ 'A' ],
+    [ 'A', 'B' ],
+    [ 'A', 'B', 'C' ],
+    [ 'A1' ],
+    [ 'A1', 'A2' ],
+    [ 'A2' ],
+    [ 'B' ],
+    [ 'B', 'C' ],
+    [ 'C' ],
+    [ 'C1' ],
+    [ 'C11' ] ]
+  );
+
+  iterator.traverse(function(n) {  });
+  test.ok(Array.isArray(iterator.result) && iterator.result.length === 0);
+
+  test.done();
+}
