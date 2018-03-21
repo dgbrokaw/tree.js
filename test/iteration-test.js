@@ -92,6 +92,43 @@ exports['Iteration: select'] = function(test) {
   test.done();
 }
 
+exports["Iteration: filterRange"] = function(test) {
+  var true_fn = function() {return true};
+  var ranges_to_arr = function(ranges) {
+    return ranges.map(function (range) {
+      return range.map(function(n) { return n.value }).join('')
+    });
+  }
+  var t0 = Tree.parse('');
+  var res = Tree.filterRange(true_fn, t0.children);
+  test.equals(res.length, 0);
+
+  var t1 = Tree.parse('A,B,C');
+  res = Tree.filterRange(true_fn, t1);
+  res = ranges_to_arr(res);
+  test.deepEqual(res, ['A', 'AB', 'ABC', 'B', 'BC', 'C']);
+
+  var t2 = Tree.parse('[A[a,b],B,C[x[y]]]');
+  res = Tree.filterRange(function (ns) { return ns.length == 2 }, t2.children);
+  res = ranges_to_arr(res);
+  test.deepEqual(res, ['AB', 'ab', 'BC']);
+  res = Tree.filterRange(function (ns) { return ns[0].value == 'x' }, t2.children);
+  res = ranges_to_arr(res);
+  test.deepEqual(res, ['x']);
+  res = Tree.filterRange(function () { return false }, t2.children);
+  test.deepEqual(res, []);
+
+  var t3 = Tree.parse('[a[b,c],d,e,f]');
+  res = Tree.filterRange(function (ns) { return ns.length == 2 }, t3.children, false);
+  res = ranges_to_arr(res);
+  test.deepEqual(res, ['ad', 'bc', 'de', 'ef']);
+  var res_no_overlap = Tree.filterRange(function (ns) { return ns.length == 2 }, t3.children, true);
+  res_no_overlap = ranges_to_arr(res_no_overlap);
+  test.deepEqual(res_no_overlap, ['ad', 'ef']);
+
+  test.done();
+}
+
 exports["Iteration: getAllNodes"] = function(test) {
   var t0 = Tree.parse('');
   var res = Tree.select_all(t0.children);

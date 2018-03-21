@@ -51,24 +51,7 @@ Tree.append_range = function(parent, nodes) {
 /// If no_overlap is set to true, the function will not search children of a
 /// successful match and will not include any nodes used in a successful match again.
 Tree.filterRange = function(selector, node, no_overlap) {
-  var result = [];
-  var nodes = Array.isArray(node) ? node : [node];
-  var f = function(nodes, idx) {
-    var range = [], n = nodes[idx];
-    for (var i=idx; i<nodes.length; i++) {
-      range.push(nodes[i]);
-      if (selector(range)) {
-        result.push(range.slice());
-        if (no_overlap) return i-idx;
-      }
-    }
-    if (n.children) {
-      for (var i=0; i<n.children.length; i++) i += f(n.children, i);
-    }
-    return 0;
-  }
-  for (var i=0; i<nodes.length; i++) i += f(nodes, i);
-  return result;
+  return iteration.filterRange(selector, node, no_overlap);
 }
 
 /// Inserts a node into the tree as the last child of 'parent'. Returns the inserted node.

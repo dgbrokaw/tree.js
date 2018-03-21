@@ -37,6 +37,12 @@ export function select(selector, tree) {
   return it.select(selector);
 }
 
+export function filterRange(selector, tree, noOverlap) {
+  let it = createIterator(tree);
+  it.traverseRange(null, selector, noOverlap);
+  return it.result;
+}
+
 export function getAllNodes(tree) {
   return filter(null, tree);
 }
