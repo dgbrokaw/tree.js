@@ -28,4 +28,6 @@ import NodeSelection from "./node-selection.js";
 
 import DepthFirstTreeIterator from "./iterator-depth-first.js";
 
-export { Tree, Node, NodeSelection, DepthFirstTreeIterator };
+import TreeRelation from "./tree-relation.js";
+
+export { Tree, Node, NodeSelection, DepthFirstTreeIterator, TreeRelation };
