@@ -282,11 +282,6 @@ exports['for_each'] = function(test) {
   Tree.for_each(function (n) { res.push(n.value) }, t1);
   test.deepEqual(res, ['A','B']);
 
-  var t1b = Tree.parse('A[B,C]');
-  res = [];
-  t1b.for_each(function (n) { res.push(n.value) });
-  test.deepEqual(res, ['A','B', 'C']);
-
   var t2 = Tree.parse('[A[A1,A2],B,C[C1[C11]]]');
   res = [];
   Tree.for_each(function (n) { res.push(n.value) }, t2.children);
