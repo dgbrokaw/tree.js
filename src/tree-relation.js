@@ -1,4 +1,5 @@
 import asArray from "./helpers/as-array.js";
+import pushNew from "./helpers/push-new.js";
 import stringifyTree from "./stringify.js";
 import mapBetweenTrees from "./map.js";
 
@@ -11,7 +12,7 @@ export default class TreeRelation {
   }
 
   init(sourceTree, targetTree) {
-    this.relation = mapBetweenTrees(sourceTree, targetTree);
+    this.relation = (this.relationStrategy)(sourceTree, targetTree);
   }
 
   relate(sourceNode) {
@@ -48,5 +49,37 @@ export default class TreeRelation {
     asArray(sourceNode).forEach(n => {
       this.relation[n.id] = asArray(targetNode);
     });
+  }
+
+  extend(sourceNode, targetNode) {
+    asArray(sourceNode).forEach(n => {
+      pushNew(this.relation[n.id], asArray(targetNode));
+    });
+  }
+
+  // WARNING: updating/extending with relations does not deep clone the
+  // contents of the passed relation. Therefore the passed relation
+  // should not be used on its own.
+  updateWithRelation(relation) {
+    Object.assign(this.relation, relation);
+  }
+
+  extendWithRelation(relation) {
+    for (let id in relation) {
+			if (!relation.hasOwnProperty(id)) continue;
+			if (id in this.relation) pushNew(this.relation[id], relation[id])
+			else this.relation[id] = relation[id];
+		}
+  }
+
+  removeTargetFromRelation(targetNode) {
+    let t = asArray(targetNode);
+    for (let id in this.relation) {
+      this.relation[id] = this.relation[id].filter(n => t.includes(n));
+    }
+  }
+
+  get relationStrategy() {
+    return mapBetweenTrees;
   }
 }

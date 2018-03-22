@@ -48,3 +48,58 @@ exports["TreeRelation: update"] = function(test) {
 
   test.done();
 }
+
+exports["TreeRelation: extend"] = function(test) {
+  var t1 = Tree.parse("O");
+  var t2 = Tree.parse("X");
+  var rel = new TreeRelation(t1, t2);
+
+  var t3 = Tree.parse("Y");
+  rel.extend(t1, t3);
+  test.ok(rel.relate(t1).length === 2);
+  test.equals(rel.relate(t1)[1], t3);
+
+  rel.extend(t1, t2);
+  test.ok(rel.relate(t1).length === 2);
+  test.equals(rel.relate(t1)[1], t2);
+
+  test.done();
+}
+
+exports["TreeRelation: updateWithRelation"] = function(test) {
+  var t1 = Tree.parse("O");
+  var t2 = Tree.parse("X");
+  var rel = new TreeRelation(t1, t2);
+
+  var t3 = Tree.parse("Y");
+  rel.updateWithRelation((rel.relationStrategy)(t1, t3));
+  test.ok(rel.relate(t1).length === 1);
+  test.equal(rel.relateOne(t1), t3);
+
+  test.done();
+}
+
+exports["TreeRelation: extendWithRelation"] = function(test) {
+  var t1 = Tree.parse("O");
+  var t2 = Tree.parse("X");
+  var rel = new TreeRelation(t1, t2);
+
+  var t3 = Tree.parse("Y");
+  rel.extendWithRelation((rel.relationStrategy)(t1, t3));
+  test.ok(rel.relate(t1).length === 2);
+  test.equals(rel.relate(t1)[1], t3);
+
+  test.done();
+}
+
+exports["TreeRelation: removal"] = function(test) {
+  var t1 = Tree.parse("O");
+  var t2 = Tree.parse("X[Y]");
+  var rel = new TreeRelation(t1, t2);
+
+  test.ok(rel.relate(t1).length === 2);
+  rel.removeTargetFromRelation(t2.getChild([0]));
+  test.ok(rel.relate(t1).length === 1);
+
+  test.done();
+}
