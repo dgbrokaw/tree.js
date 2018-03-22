@@ -4,8 +4,8 @@ import asArray from "./helpers/as-array.js";
 import stringify from "./stringify.js";
 import validate from "./validate.js";
 import clone from "./clone.js";
-import mapBetweenTrees from "./map.js";
-import oneToOneMapBetweenTrees from "./map-one-to-one.js";
+import relationBetweenTrees from "./relate.js";
+import oneToOneRelationBetweenTrees from "./relate-one-to-one.js";
 import DepthFirstTreeIterator from "./iterator-depth-first.js";
 
 export default class Node {
@@ -229,8 +229,8 @@ function unlinkParent(nodes) {
 
 Node.prototype.stringify = function() { return stringify(this) }
 Node.prototype.clone = function(keep_ids, fields_to_clone) { return clone(this, keep_ids, fields_to_clone) }
-Node.prototype.get_mapping_to = function(target) { return mapBetweenTrees(this, target) }
-Node.prototype.get_1to1_mapping_to = function(target, strict) { return oneToOneMapBetweenTrees(this, target, strict) }
+Node.prototype.get_mapping_to = function(target) { return relationBetweenTrees(this, target) }
+Node.prototype.get_1to1_mapping_to = function(target, strict) { return oneToOneRelationBetweenTrees(this, target, strict) }
 Node.prototype.validate = function() { return validate(this) }
 
 Node.prototype.for_each = function(f) { return Tree.for_each(f, this) }

@@ -7,7 +7,7 @@
  * If not in strict mode, the structure mismatch is ignored and all a partial
  * mapping is returned.
  */
-export default function oneToOneMapBetweenTrees(source_tree, target_tree, strict) {
+export default function oneToOneRelationBetweenTrees(source_tree, target_tree, strict) {
   var map = {};
   if (arguments.length < 3) strict = true;
 

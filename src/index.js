@@ -18,11 +18,11 @@ Tree.uid = id;
 import cloneTree from "./clone.js";
 Tree.clone = cloneTree;
 
-import mapBetweenTrees from "./map.js";
-Tree.get_mapping_between = mapBetweenTrees;
+import relationBetweenTrees from "./relate.js";
+Tree.get_mapping_between = relationBetweenTrees;
 
-import oneToOneMapBetweenTrees from "./map-one-to-one.js";
-Tree.get_1to1_mapping_between = oneToOneMapBetweenTrees;
+import oneToOneRelationBetweenTrees from "./relate-one-to-one.js";
+Tree.get_1to1_mapping_between = oneToOneRelationBetweenTrees;
 
 import NodeSelection from "./node-selection.js";
 

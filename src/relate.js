@@ -18,7 +18,7 @@
  * node, the method throws an exception. It also throws an exception if there
  * are duplicate ids in the source tree.
  */
-export default function mapBetweenTrees(source_tree, target_tree) {
+export default function relationBetweenTrees(source_tree, target_tree) {
   var map = {};
 
   function mapfn(source, target) {
