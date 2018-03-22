@@ -8,18 +8,18 @@
  * mapping is returned.
  */
 export default function oneToOneRelationBetweenTrees(source_tree, target_tree, strict) {
-  var map = {};
+  var relation = {};
   if (arguments.length < 3) strict = true;
 
-  function mapfn(source, target) {
-    if (strict && source.id in map) throw "duplicate id in source tree";
-    map[source.id] = [target];
+  function relationfn(source, target) {
+    if (strict && source.id in relation) throw "duplicate id in source tree";
+    relation[source.id] = [target];
     if (strict && source.children.length !== target.children.length)
       throw "tree structures don't match"
     var slen = source.children.length, tlen = target.children.length;
     for (var i=0; i<slen; i++) {
-      if (i<tlen) mapfn(source.children[i], target.children[i]);
-      else source.children[i].for_each(function(s) { map[s.id] = []});
+      if (i<tlen) relationfn(source.children[i], target.children[i]);
+      else source.children[i].for_each(function(s) { relation[s.id] = []});
     }
   }
 
@@ -27,10 +27,10 @@ export default function oneToOneRelationBetweenTrees(source_tree, target_tree, s
     if (strict && source_tree.length !== target_tree.length) throw "tree structures don't match";
     var slen = source_tree.length, tlen = target_tree.length;
     for (var i=0; i<slen; i++) {
-      if (i<tlen) mapfn(source_tree[i], target_tree[i]);
-      else source_tree[i].for_each(function(s) { map[s.id] = []});
+      if (i<tlen) relationfn(source_tree[i], target_tree[i]);
+      else source_tree[i].for_each(function(s) { relation[s.id] = []});
     }
-  } else mapfn(source_tree, target_tree);
+  } else relationfn(source_tree, target_tree);
 
-  return map;
+  return relation;
 }

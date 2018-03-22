@@ -19,24 +19,24 @@
  * are duplicate ids in the source tree.
  */
 export default function relationBetweenTrees(source_tree, target_tree) {
-  var map = {};
+  var relation = {};
 
-  function mapfn(source, target) {
-    if (source.id in map) throw "duplicate id in source tree";
-    map[source.id] = [target];
+  function relationfn(source, target) {
+    if (source.id in relation) throw "duplicate id in source tree";
+    relation[source.id] = [target];
     if (source.children.length !== target.children.length) {
-      if (!source.hasChildren()) map[source.id] = target.select_all();
-      else if (!target.hasChildren()) source.for_each(function(s) { map[s.id] = [target]});
+      if (!source.hasChildren()) relation[source.id] = target.select_all();
+      else if (!target.hasChildren()) source.for_each(function(s) { relation[s.id] = [target]});
       else throw "tree structures don't match";
     } else {
-      for (var i=0; i<source.children.length; i++) mapfn(source.children[i], target.children[i]);
+      for (var i=0; i<source.children.length; i++) relationfn(source.children[i], target.children[i]);
     }
   }
 
   if (Array.isArray(source_tree)) {
     if (source_tree.length !== target_tree.length) throw "tree structures don't match";
-    for (var i=0; i<source_tree.length; i++) mapfn(source_tree[i], target_tree[i]);
-  } else mapfn(source_tree, target_tree);
+    for (var i=0; i<source_tree.length; i++) relationfn(source_tree[i], target_tree[i]);
+  } else relationfn(source_tree, target_tree);
 
-  return map;
+  return relation;
 }
