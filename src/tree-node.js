@@ -8,9 +8,6 @@ import mapBetweenTrees from "./map.js";
 import oneToOneMapBetweenTrees from "./map-one-to-one.js";
 import DepthFirstTreeIterator from "./iterator-depth-first.js";
 
-/// To get all static methods of the Tree object as instance methods on your
-/// object, you can make it inherit from the "Tree.Node" class (use
-/// `new Tree.Node()` as the prototype).
 export default class Node {
   constructor() {
     this._children = [];
@@ -44,7 +41,7 @@ export default class Node {
     let path = [];
     let node = this;
     while (node.parent) {
-      path.unshift(node.parent.children.indexOf(node));
+      path.unshift(node.position);
       node = node.parent;
     }
     return path;
@@ -81,6 +78,7 @@ export default class Node {
     return node;
   }
 
+  // The returned siblings *includes* this node.
   get siblings() {
     if (!this.parent) {
       throw "[Node] Attempted to get siblings of node which has no parent.";
@@ -89,12 +87,8 @@ export default class Node {
   }
 
   insert(position, child) {
-    child.ls = this.children[position-1];
-    if (this.children[position-1]) this.children[position-1].rs = child;
-    child.rs = this.children[position];
-    if (this.children[position]) this.children[position].ls = child;
-    child.parent = this;
-    this.children.splice(position, 0, child);
+    linkChildForPosition.call(this, position, child);
+    addToChildren.call(this, position, child);
     return child;
   }
 
@@ -107,12 +101,9 @@ export default class Node {
   }
 
   remove() {
-    let position = this.position;
-    let siblings = this.siblings;
-    if (siblings[position-1]) siblings[position-1].rs = this.rs;
-    if (siblings[position+1]) siblings[position+1].ls = this.ls;
-    siblings.splice(position, 1);
-    this.parent = null;
+    let parent = this.parent;
+    let position = unlinkChild(this);
+    removeFromChildren.call(parent, position, this);
     return position;
   }
 
@@ -150,12 +141,7 @@ export default class Node {
     if (range.length === 0) {
       throw "[Node] Attempted to insert empty range into tree.";
     }
-    range[0].ls = this.children[position-1];
-    if (this.children[position-1]) this.children[position-1].rs = range[0];
-    range[range.length-1].rs = this.children[position];
-    if (this.children[position]) this.children[position].ls = range[range.length-1];
-    for (var i=0; i<range.length; i++) range[i].parent = this;
-    this.children = this.children.slice(0,position).concat(range, this.children.slice(position));
+    this.insert(position, range);
     return range;
   }
 
@@ -171,12 +157,8 @@ export default class Node {
     if (range.length === 0) {
       throw "[Node] Attempted to remove empty range from node's children.";
     }
-    let position = range[0].position;
-    let siblings = range[0].siblings;
-    if (siblings[position-1]) siblings[position-1].rs = range[range.length-1].rs;
-    if (siblings[position+range.length]) siblings[position+range.length].ls = range[0].ls;
-    siblings.splice(position, range.length);
-    range.forEach(node => node.parent = null);
+    let position = unlinkChild(range);
+    removeFromChildren.call(this, position, range);
     return position;
   }
 
@@ -187,6 +169,61 @@ export default class Node {
   createIterator() {
     return new (this.iterator)(this);
   }
+}
+
+// These two functions must be called with a "this" context.
+function linkChildForPosition(position, newChild) {
+  let nodes = asArray(newChild);
+  linkLeftSibling(position, nodes, this.children);
+  linkRightSibling(position, nodes, this.children);
+  linkParent(nodes, this);
+}
+function addToChildren(position, child) {
+  this.children = this.children.slice(0, position).concat(asArray(child), this.children.slice(position));
+}
+// WARNING: only use these functions before insertion has taken place.
+function linkLeftSibling(position, nodes, siblings) {
+  let leftSibling = siblings[position-1];
+  let node = nodes[0];
+  node.ls = leftSibling;
+  if (leftSibling) {
+    leftSibling.rs = node;
+  }
+}
+function linkRightSibling(position, nodes, siblings) {
+  let rightSibling = siblings[position];
+  let node = nodes[nodes.length-1];
+  node.rs = rightSibling;
+  if (rightSibling) {
+    rightSibling.ls = node;
+  }
+}
+function linkParent(children, parent) {
+  children.forEach(c => c.parent = parent);
+}
+
+function unlinkChild(child) {
+  let nodes = asArray(child);
+  let position = nodes[0].position;
+  let siblings = nodes[0].siblings;
+  unlinkLeftSibling(position, nodes, siblings);
+  unlinkRightSibling(position, nodes, siblings);
+  unlinkParent(nodes);
+  return position;
+}
+function removeFromChildren(position, child) {
+  this.children.splice(position, asArray(child).length);
+}
+function unlinkLeftSibling(position, nodes, siblings) {
+  let leftSibling = siblings[position-1];
+  if (leftSibling) leftSibling.rs = nodes[nodes.length-1].rs;
+}
+function unlinkRightSibling(position, nodes, siblings) {
+  let rightSibling = siblings[position+nodes.length];
+  if (rightSibling) rightSibling.ls = nodes[0].ls;
+}
+function unlinkParent(nodes) {
+  nodes.forEach(n => n.parent = null);
 }
 
 Node.prototype.stringify = function() { return stringify(this) }
