@@ -1,7 +1,7 @@
 import asArray from "./helpers/as-array.js";
 import pushNew from "./helpers/push-new.js";
 import stringifyTree from "./stringify.js";
-import mapBetweenTrees from "./map.js";
+import relationBetweenTrees from "./relate.js";
 
 export default class TreeRelation {
   constructor(sourceTree, targetTree) {
@@ -80,6 +80,6 @@ export default class TreeRelation {
   }
 
   get relationStrategy() {
-    return mapBetweenTrees;
+    return relationBetweenTrees;
   }
 }
