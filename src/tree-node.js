@@ -211,6 +211,7 @@ function unlinkChild(child) {
   unlinkParent(nodes);
   return position;
 }
+// Must be called with a "this" context.
 function removeFromChildren(position, child) {
   this.children.splice(position, asArray(child).length);
 }
