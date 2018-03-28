@@ -24,8 +24,7 @@ Tree.create = function() {
 }
 
 Tree.parse = function(str) {
-  let builder = new TreeBuilder();
-  let director = new StringParseDirector(builder);
+  let director = new StringParseDirector(new TreeBuilder());
   return director.construct(str);
 }
 
