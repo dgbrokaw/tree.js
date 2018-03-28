@@ -3,8 +3,19 @@ import Tree from "./tree.js";
 import Node from "./tree-node.js";
 Tree.Node = Node;
 
-import parseTree from "./parse.js";
-Tree.parse = parseTree;
+import TreeBuilder from "./tree-builder.js";
+
+import StringParseDirector from "./build-from-string.js";
+
+Tree.create = function() {
+  return new Node();
+}
+
+Tree.parse = function(str) {
+  let builder = new TreeBuilder();
+  let director = new StringParseDirector(builder);
+  return director.construct(str);
+}
 
 import validateTree from "./validate.js";
 Tree.validate = validateTree;
@@ -30,4 +41,4 @@ import DepthFirstTreeIterator from "./iterator-depth-first.js";
 
 import TreeRelation from "./tree-relation.js";
 
-export { Tree, Node, NodeSelection, DepthFirstTreeIterator, TreeRelation };
+export { Tree, Node, TreeBuilder, StringParseDirector, NodeSelection, DepthFirstTreeIterator, TreeRelation };
