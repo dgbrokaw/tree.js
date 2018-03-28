@@ -8,8 +8,7 @@ export default class StringParseDirector {
   construct(str) {
     this.builder.start();
     this.builder.createChild();
-    let i;
-    for (i=0; i<str.length; i++) {
+    for (let i=0; i<str.length; i++) {
       var char = str[i];
       if (char == '[') {
         this.builder.createChild();
