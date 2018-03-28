@@ -1,5 +1,3 @@
-import TreeBuilder from "./tree-builder.js";
-
 export default class StringParseDirector {
   constructor(builder) {
     this.builder = builder;

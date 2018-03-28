@@ -31,4 +31,18 @@ import DepthFirstTreeIterator from "./iterator-depth-first.js";
 
 import TreeRelation from "./tree-relation.js";
 
-export { Tree, Node, TreeBuilder, StringParseDirector, NodeSelection, DepthFirstTreeIterator, TreeRelation };
+import StringBuilder from "./string-builder.js";
+
+import TreeSerializeDirector from "./build-string-from-tree.js";
+
+export {
+  Tree
+, Node
+, TreeBuilder
+, StringParseDirector
+, NodeSelection
+, DepthFirstTreeIterator
+, TreeRelation
+, StringBuilder
+, TreeSerializeDirector
+};
