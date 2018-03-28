@@ -9,6 +9,8 @@ itself. Instead, each object can be a tree node.
 Most of the methods can accept both a single node or an array of nodes to work on.
 */
 import Node from "./tree-node.js";
+import TreeBuilder from "./tree-builder.js";
+import StringParseDirector from "./build-from-string.js";
 import NodeSelection from "./node-selection.js";
 import DepthFirstTreeIterator from "./iterator-depth-first.js";
 import * as iteration from "./iteration.js";
@@ -16,6 +18,16 @@ import * as iteration from "./iteration.js";
 var Tree = { version: '1.3.7' };
 
 export default Tree;
+
+Tree.create = function() {
+  return new Node();
+}
+
+Tree.parse = function(str) {
+  let builder = new TreeBuilder();
+  let director = new StringParseDirector(builder);
+  return director.construct(str);
+}
 
 /// Returns the smallest range of nodes (continuous, ordered neighbors) covering the passed
 /// nodes. The method first gets the closest common ancestor and then selects a range of its
