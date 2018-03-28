@@ -1,7 +1,6 @@
 import Tree from "./tree.js";
 import id from "./helpers/id.js";
 import asArray from "./helpers/as-array.js";
-import stringify from "./stringify.js";
 import validate from "./validate.js";
 import clone from "./clone.js";
 import relationBetweenTrees from "./relate.js";
@@ -227,7 +226,7 @@ function unlinkParent(nodes) {
   nodes.forEach(n => n.parent = null);
 }
 
-Node.prototype.stringify = function() { return stringify(this) }
+Node.prototype.stringify = function() { return Tree.stringify(this) }
 Node.prototype.clone = function(keep_ids, fields_to_clone) { return clone(this, keep_ids, fields_to_clone) }
 Node.prototype.get_mapping_to = function(target) { return relationBetweenTrees(this, target) }
 Node.prototype.get_1to1_mapping_to = function(target, strict) { return oneToOneRelationBetweenTrees(this, target, strict) }

@@ -171,12 +171,12 @@ exports['remove_range'] = function(test) {
 
 exports['insert'] = function(test) {
   var t0 = Tree.parse('');
-  Tree.insert(t0, 0, {value:'A'});
+  Tree.insert(t0, 0, {value:'A', children: []});
   test.equals(Tree.stringify(t0), '[A]');
   test.doesNotThrow(function(){Tree.validate(t0)});
 
   var t1 = Tree.parse('[A,B]');
-  Tree.insert(t1, 1, {value: 'AB'});
+  Tree.insert(t1, 1, {value: 'AB', children:[]});
   test.equals(Tree.stringify(t1), '[A,AB,B]');
   test.doesNotThrow(function(){Tree.validate(t1)});
 
@@ -185,12 +185,12 @@ exports['insert'] = function(test) {
 
 exports['append'] = function(test) {
   var t0 = Tree.parse('');
-  Tree.append(t0, {value:'A'});
+  Tree.append(t0, {value:'A', children:[]});
   test.equals(Tree.stringify(t0), '[A]');
   test.doesNotThrow(function(){Tree.validate(t0)});
 
   var t1 = Tree.parse('[A[a,b],B]');
-  Tree.append(t1.children[0], {value: 'c'});
+  Tree.append(t1.children[0], {value: 'c', children:[]});
   test.equals(Tree.stringify(t1), '[A[a,b,c],B]');
   test.doesNotThrow(function(){Tree.validate(t1)});
 

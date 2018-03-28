@@ -6,9 +6,6 @@ Tree.Node = Node;
 import validateTree from "./validate.js";
 Tree.validate = validateTree;
 
-import stringifyTree from "./stringify.js";
-Tree.stringify = stringifyTree;
-
 import id from "./helpers/id.js";
 Tree.uid = id;
 

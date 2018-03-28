@@ -1,6 +1,5 @@
 import asArray from "./helpers/as-array.js";
 import pushNew from "./helpers/push-new.js";
-import stringifyTree from "./stringify.js";
 import relationBetweenTrees from "./relate.js";
 
 export default class TreeRelation {

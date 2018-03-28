@@ -1,5 +1,4 @@
 import asArray from "./helpers/as-array.js";
-import stringifyTree from "./stringify.js";
 import Tree from "./tree.js";
 
 export default class NodeSelection {
@@ -93,7 +92,7 @@ export default class NodeSelection {
   }
 
   toString() {
-    return "[" + this._selection.map(n => stringifyTree(n)) + "]";
+    return "[" + this._selection.map(n => Tree.stringify(n)) + "]";
   }
 }
 

@@ -39,24 +39,6 @@ exports["Node: position"] = function(test) {
   test.done();
 }
 
-// exports["Node: firstChild & lastChild"] = function(test) {
-//   var t1 = Tree.parse('A');
-//   test.equals(t1.firstChild, null);
-//
-//   var t2 = Tree.parse('[A]');
-//   test.equals(t2.firstChild.stringify(), "A");
-//   test.equals(t2.lastChild.stringify(), "A");
-//
-//   var t3 = Tree.parse("[A,B]");
-//   test.equals(t3.firstChild.stringify(), "A");
-//   test.equals(t3.lastChild.stringify(), "B");
-//
-//   var t4 = Tree.parse("[A,B,C]");
-//   test.equals(t4.lastChild.stringify(), "C");
-//
-//   test.done();
-// }
-
 exports["Node: path"] = function(test) {
   var tree = Tree.parse('[A,B[a,b],C,D[j[x,y,z[1,2]]]]');
 
@@ -91,27 +73,27 @@ exports["Node: root"] = function(test) {
 
 exports['Node: single-child insertion'] = function(test) {
   var t0 = Tree.parse('');
-  t0.insert(0, {value:'A'});
+  t0.insert(0, {value:'A', children:[]});
   test.equals(t0.stringify(), '[A]');
   test.doesNotThrow(function(){Tree.validate(t0)});
 
   var t1 = Tree.parse('[A,B]');
-  t1.insert(1, {value: 'AB'});
+  t1.insert(1, {value: 'AB', children:[]});
   test.equals(t1.stringify(), '[A,AB,B]');
   test.doesNotThrow(function(){Tree.validate(t1)});
 
   var t2 = Tree.parse('');
-  t2.append({value:'A'});
+  t2.append({value:'A', children:[]});
   test.equals(t2.stringify(), '[A]');
   test.doesNotThrow(function(){Tree.validate(t2)});
 
   var t3 = Tree.parse('[A[a,b],B]');
-  t3.getChild([0]).append({value: 'c'});
+  t3.getChild([0]).append({value: 'c', children:[]});
   test.equals(t3.stringify(), '[A[a,b,c],B]');
   test.doesNotThrow(function(){Tree.validate(t3)});
 
   var t4 = Tree.parse('[A[a,b],B]');
-  t4.getChild([0]).prepend({value: 'c'});
+  t4.getChild([0]).prepend({value: 'c', children:[]});
   test.equals(t4.stringify(), '[A[c,a,b],B]');
   test.doesNotThrow(function(){Tree.validate(t4)});
 

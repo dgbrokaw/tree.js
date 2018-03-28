@@ -1,5 +1,4 @@
-import stringifyTree from "./stringify.js";
-
+// Inverse of the StringParseDirector class.
 export default class TreeSerializeDirector {
   constructor(builder) {
     this.builder = builder;
@@ -10,7 +9,6 @@ export default class TreeSerializeDirector {
     let bldr = this.builder;
     let f = function(node) {
       bldr.setValue(node);
-      console.log("value: " + node.value + ", ch: " + (node.hasChildren() ? node.children.length : 0));
       node.children.forEach(child => {
         if (!child.ls) {
           bldr.createChild(child);

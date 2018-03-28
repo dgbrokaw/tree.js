@@ -1,3 +1,4 @@
+// Inverse of TreeBuilder class.
 export default class StringBuilder {
   constructor() {
     this._str = null;
