@@ -12,15 +12,15 @@ export default class StringBuilder {
     this._str += node.value;
   }
 
-  createChild(node) {
+  createChild() {
     this._str += "[";
   }
 
-  createSibling(node) {
+  createSibling() {
     this._str += ",";
   }
 
-  finishSiblings(node) {
+  finishSiblings() {
     this._str += "]";
   }
 

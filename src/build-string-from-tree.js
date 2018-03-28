@@ -11,10 +11,10 @@ export default class TreeSerializeDirector {
       bldr.setValue(node);
       node.children.forEach(child => {
         if (!child.ls) {
-          bldr.createChild(child);
+          bldr.createChild();
         }
         else {
-          bldr.createSibling(child);
+          bldr.createSibling();
         }
         f(child);
         if (!child.rs) {
