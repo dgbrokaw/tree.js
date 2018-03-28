@@ -230,7 +230,6 @@ Node.prototype.stringify = function() { return Tree.stringify(this) }
 Node.prototype.clone = function(keep_ids, fields_to_clone) { return clone(this, keep_ids, fields_to_clone) }
 Node.prototype.get_mapping_to = function(target) { return relationBetweenTrees(this, target) }
 Node.prototype.get_1to1_mapping_to = function(target, strict) { return oneToOneRelationBetweenTrees(this, target, strict) }
-Node.prototype.validate = function() { return validate(this) }
 
 Node.prototype.for_each = function(f) { return Tree.for_each(f, this) }
 Node.prototype.map = function(f) { return Tree.map(f, this) }

@@ -78,7 +78,6 @@ exports['validate'] = function(test) {
 
   var t2 = Tree.parse('[A[A1,A2],B,C[C1[C11]]]');
   test.doesNotThrow(function() {Tree.validate(t2)});
-  test.doesNotThrow(function() {t2.validate()});
 
   var t2b = Tree.parse('A[A1,A2],B,C[C1[C11]]');
   test.doesNotThrow(function() {Tree.validate(t2b)});
