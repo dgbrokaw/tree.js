@@ -110,57 +110,57 @@ exports['validate'] = function(test) {
   test.done();
 }
 
-exports['insert_range'] = function(test) {
+exports['insertRange'] = function(test) {
   var t0 = Tree.parse('');
-  Tree.insert_range(t0, 0, Tree.parse('[a,b]').children);
+  Tree.insertRange(t0, 0, Tree.parse('[a,b]').children);
   test.equals(Tree.stringify(t0), '[a,b]');
   test.doesNotThrow(function(){Tree.validate(t0)});
 
   var t1 = Tree.parse('[A,B]');
-  Tree.insert_range(t1, 1, Tree.parse('[a,b,c]').children.slice(1,3));
+  Tree.insertRange(t1, 1, Tree.parse('[a,b,c]').children.slice(1,3));
   test.equals(Tree.stringify(t1), '[A,b,c,B]');
   test.doesNotThrow(function(){Tree.validate(t1)});
 
   var t2 = Tree.parse('[A,B]');
-  Tree.insert_range(t2, 1, []);
+  Tree.insertRange(t2, 1, []);
   test.equals(Tree.stringify(t2), '[A,B]');
   test.doesNotThrow(function(){Tree.validate(t2)});
 
   test.done();
 }
 
-exports['append_range'] = function(test) {
+exports['appendRange'] = function(test) {
   var t0 = Tree.parse('');
-  Tree.append_range(t0, Tree.parse('[a,b]').children);
+  Tree.appendRange(t0, Tree.parse('[a,b]').children);
   test.equals(Tree.stringify(t0), '[a,b]');
   test.doesNotThrow(function(){Tree.validate(t0)});
 
   var t1 = Tree.parse('[A,B]');
-  Tree.append_range(t1, Tree.parse('[a,b,c]').children.slice(1,3));
+  Tree.appendRange(t1, Tree.parse('[a,b,c]').children.slice(1,3));
   test.equals(Tree.stringify(t1), '[A,B,b,c]');
   test.doesNotThrow(function(){Tree.validate(t1)});
 
   var t2 = Tree.parse('[A,B]');
-  Tree.append_range(t2, []);
+  Tree.appendRange(t2, []);
   test.equals(Tree.stringify(t2), '[A,B]');
   test.doesNotThrow(function(){Tree.validate(t2)});
 
   test.done();
 }
 
-exports['remove_range'] = function(test) {
-  test.doesNotThrow(function(){Tree.remove_range([])});
+exports['removeRange'] = function(test) {
+  test.doesNotThrow(function(){Tree.removeRange([])});
 
   var t1 = Tree.parse('[A,B,C]');
   var n = t1.children[1];
-  var idx = Tree.remove_range([t1.children[1]]);
+  var idx = Tree.removeRange([t1.children[1]]);
   test.equals(Tree.stringify(t1), '[A,C]');
   test.equals(idx, 1);
   test.equals(n.parent, null);
   test.doesNotThrow(function(){Tree.validate(t1)});
 
   var t2 = Tree.parse('[A,B[a,b],C,D]');
-  idx = Tree.remove_range(t2.children.slice(0,3));
+  idx = Tree.removeRange(t2.children.slice(0,3));
   test.equals(Tree.stringify(t2), '[D]');
   test.equals(idx, 0);
   test.doesNotThrow(function(){Tree.validate(t2)});
@@ -243,29 +243,29 @@ exports['replace'] = function(test) {
   test.done();
 }
 
-exports['switch_siblings'] = function(test) {
+exports['switchSiblings'] = function(test) {
   var t0 = Tree.parse('[A,B,C]');
-  Tree.switch_siblings(t0.children[0], t0.children[2]);
+  Tree.switchSiblings(t0.children[0], t0.children[2]);
   test.equals(Tree.stringify(t0), '[C,B,A]');
   test.doesNotThrow(function(){Tree.validate(t0)});
 
   var t1 = Tree.parse('[A,B,C]');
-  Tree.switch_siblings(t1.children[2], t1.children[0]);
+  Tree.switchSiblings(t1.children[2], t1.children[0]);
   test.equals(Tree.stringify(t1), '[C,B,A]');
   test.doesNotThrow(function(){Tree.validate(t1)});
 
   var t2 = Tree.parse('[A,B,C]');
-  Tree.switch_siblings(t2.children[1], t2.children[2]);
+  Tree.switchSiblings(t2.children[1], t2.children[2]);
   test.equals(Tree.stringify(t2), '[A,C,B]');
   test.doesNotThrow(function(){Tree.validate(t2)});
 
   var t3 = Tree.parse('[A,B,C]');
-  Tree.switch_siblings(t3.children[1], t3.children[0]);
+  Tree.switchSiblings(t3.children[1], t3.children[0]);
   test.equals(Tree.stringify(t3), '[B,A,C]');
   test.doesNotThrow(function(){Tree.validate(t3)});
 
   var t4 = Tree.parse('[A[b]]');
-  test.throws(function() {Tree.switch_siblings(t4.children[0], t4.children[0].children[0])});
+  test.throws(function() {Tree.switchSiblings(t4.children[0], t4.children[0].children[0])});
 
   test.done();
 }
@@ -273,20 +273,20 @@ exports['switch_siblings'] = function(test) {
 exports['for_each'] = function(test) {
   var t0 = Tree.parse('');
   var res = [];
-  Tree.for_each(function (n) { res.push(n.value) }, t0.children);
+  Tree.forEach(function (n) { res.push(n.value) }, t0.children);
   test.equals(res.length, 0);
 
   var t1 = Tree.parse('A,B');
   res = [];
-  Tree.for_each(function (n) { res.push(n.value) }, t1);
+  Tree.forEach(function (n) { res.push(n.value) }, t1);
   test.deepEqual(res, ['A','B']);
 
   var t2 = Tree.parse('[A[A1,A2],B,C[C1[C11]]]');
   res = [];
-  Tree.for_each(function (n) { res.push(n.value) }, t2.children);
+  Tree.forEach(function (n) { res.push(n.value) }, t2.children);
   test.deepEqual(res, ['A','A1','A2','B','C','C1','C11']);
   res = [];
-  Tree.for_each(function (n) { res.push(n.value) }, t2.children[0]);
+  Tree.forEach(function (n) { res.push(n.value) }, t2.children[0]);
   test.deepEqual(res, ['A','A1','A2']);
 
   test.done();
@@ -387,11 +387,11 @@ exports['filterRange'] = function(test) {
 
 exports['select_all'] = function(test) {
   var t0 = Tree.parse('');
-  var res = Tree.select_all(t0.children);
+  var res = Tree.getAllNodes(t0.children);
   test.equals(res.length, 0);
 
   var t1 = Tree.parse('[A[A1,A2],B,C[C1[C11]]]');
-  res = Tree.select_all(t1.children);
+  res = Tree.getAllNodes(t1.children);
   res = res.map(function (n) { return n.value }).join(' ');
   test.deepEqual(res, 'A A1 A2 B C C1 C11');
 
@@ -407,11 +407,11 @@ exports['select_first'] = function(test) {
   var true_fn = function() {return true};
   var false_fn = function() {return false};
   var t0 = Tree.parse('');
-  var res = Tree.select_first(true_fn, t0.children);
+  var res = Tree.select(true_fn, t0.children);
   test.equals(res, null);
 
   var t1 = Tree.parse('A,B');
-  res = Tree.select_first(true_fn, t1);
+  res = Tree.select(true_fn, t1);
   test.equals(res, t1[0]);
 
   var t1b = Tree.parse('[B,C]');
@@ -419,13 +419,13 @@ exports['select_first'] = function(test) {
   test.equals(res, t1b.children[0]);
 
   var t2 = Tree.parse('[A]');
-  res = Tree.select_first(false_fn, t2.children[0]);
+  res = Tree.select(false_fn, t2.children[0]);
   test.equals(res, null);
 
   var t3 = Tree.parse('[A[A1,A2],BB,C[C1[C11]]]');
-  res = Tree.select_first(function (n) { return n.value.length == 3 }, t3.children);
+  res = Tree.select(function (n) { return n.value.length == 3 }, t3.children);
   test.equals(res, t3.children[2].children[0].children[0]);
-  res = Tree.select_first(false_fn, t3.children[0]);
+  res = Tree.select(false_fn, t3.children[0]);
   test.equals(res, null);
 
   test.done();
@@ -470,35 +470,35 @@ exports['clone'] = function(test) {
   test.strictEqual(c2[1].ls, c2[0], 'correct left sibling');
   test.strictEqual(c2[2].ls, c2[1], 'correct left sibling');
 
-  test.deepEqual(Tree.map(f,n2), Tree.map(f,c2));
+  // test.deepEqual(Tree.map(f,n2), Tree.map(f,c2));
 
   test.done();
 }
 
-exports['get_1to1_mapping_between'] = function(test) {
+exports['getOneToOneRelationBetween'] = function(test) {
   function set_ids(nodes) {
-    Tree.for_each(function(node) { node.id = node.value }, nodes);
+    Tree.forEach(function(node) { node.id = node.value }, nodes);
     return nodes;
   }
   var map;
   var n0 = set_ids(Tree.parse('[A]').children[0]);
   var c0 = Tree.parse('[A]').children[0];
-  map = Tree.get_1to1_mapping_between(n0, c0);
+  map = Tree.getOneToOneRelationBetween(n0, c0);
   test.strictEqual(map.A[0], c0);
 
   var n1 = Tree.parse('O[A,B[1,2],C]');
   var c1 = Tree.parse('O[A,B[1,2],C]');
   var mappings = n1.map(function(node) {
-    return {id: node.id, target: Tree.get_child(Tree.get_path(node), c1)};
+    return {id: node.id, target: Tree.getChild(Tree.getPath(node), c1)};
   });
-  map = Tree.get_1to1_mapping_between(n1, c1);
+  map = Tree.getOneToOneRelationBetween(n1, c1);
   mappings.forEach(function(mapping) {
     test.strictEqual(map[mapping.id][0], mapping.target);
   });
 
   var ns = set_ids(Tree.parse('[A,B[b],C]').children);
   var cs = Tree.clone(ns);
-  map = Tree.get_1to1_mapping_between(ns, cs);
+  map = Tree.getOneToOneRelationBetween(ns, cs);
   test.strictEqual(map.A.length, 1);
   test.strictEqual(map.A[0], cs[0]);
   test.strictEqual(map.B[0], cs[1]);
@@ -510,17 +510,17 @@ exports['get_1to1_mapping_between'] = function(test) {
 
   var ns2 = Tree.parse('[A]').children;
   var cs2 = Tree.parse('[A,B]').children;
-  test.throws(function() { Tree.get_1to1_mapping_between(ns2, cs2) }
+  test.throws(function() { Tree.getOneToOneRelationBetween(ns2, cs2) }
              ,"structures don't match");
 
   var ns3 = Tree.parse('[A]').children;
   var cs3 = Tree.parse('[A[B]]').children;
-  test.throws(function() { Tree.get_1to1_mapping_between(ns3, cs3) }
+  test.throws(function() { Tree.getOneToOneRelationBetween(ns3, cs3) }
              ,"structures don't match");
 
   var ns4 = set_ids(Tree.parse('[A[B],C]').children);
   var cs4 = Tree.parse('[A,C,D]').children;
-  map = Tree.get_1to1_mapping_between(ns4, cs4, false);
+  map = Tree.getOneToOneRelationBetween(ns4, cs4, false);
   test.strictEqual(map.A.length, 1);
   test.strictEqual(map.A[0], cs4[0]);
   test.strictEqual(map.B.length, 0);
@@ -528,30 +528,30 @@ exports['get_1to1_mapping_between'] = function(test) {
   test.strictEqual(map.C.length, 1);
 
   var ns5 = set_ids(Tree.parse('[A,A]').children);
-  test.throws(function() { Tree.get_1to1_mapping_between(ns5, ns5) }
+  test.throws(function() { Tree.getOneToOneRelationBetween(ns5, ns5) }
              ,"duplicate ids");
 
   test.done();
 }
 
-exports['get_mapping_between'] = function(test) {
+exports['getRelationBetween'] = function(test) {
   function set_ids(nodes) {
-    Tree.for_each(function(node) { node.id = node.value }, nodes);
+    Tree.forEach(function(node) { node.id = node.value }, nodes);
     return nodes;
   }
   var map;
   var n0 = set_ids(Tree.parse('[A]').children[0]);
   var c0 = Tree.parse('[A]').children[0];
-  map = Tree.get_mapping_between(n0, c0);
+  map = Tree.getRelationBetween(n0, c0);
   test.strictEqual(map.A[0], c0);
   test.equals(map.A.length, 1);
 
   var n1 = Tree.parse('O[A,B[1,2],C]');
   var c1 = Tree.parse('O[A,B[1,2],C]');
   var mappings = n1.map(function(node) {
-    return {id: node.id, target: Tree.get_child(Tree.get_path(node), c1)};
+    return {id: node.id, target: Tree.getChild(Tree.getPath(node), c1)};
   });
-  map = Tree.get_mapping_between(n1, c1);
+  map = Tree.getRelationBetween(n1, c1);
   mappings.forEach(function(mapping) {
     test.strictEqual(map[mapping.id][0], mapping.target);
     test.equals(map[mapping.id].length, 1);
@@ -559,7 +559,7 @@ exports['get_mapping_between'] = function(test) {
 
   var ns = set_ids(Tree.parse('[A,B]')).children;
   var cs = set_ids(Tree.parse('[A[a[b],c],B]')).children;
-  map = Tree.get_mapping_between(ns, cs);
+  map = Tree.getRelationBetween(ns, cs);
   test.equals(map.A.length, 4);
   test.strictEqual(map.A[0], cs[0]);
   test.strictEqual(map.A[1], cs[0].children[0]);
@@ -568,7 +568,7 @@ exports['get_mapping_between'] = function(test) {
   test.equals(map.B.length, 1);
   test.strictEqual(map.B[0], cs[1]);
 
-  map = Tree.get_mapping_between(cs, ns);
+  map = Tree.getRelationBetween(cs, ns);
   test.equals(map.A.length, 1);
   test.strictEqual(map.A[0], ns[0]);
   test.equals(map.a.length, 1);
@@ -582,11 +582,11 @@ exports['get_mapping_between'] = function(test) {
 
   var ns2 = Tree.parse('[A]').children;
   var cs2 = Tree.parse('[A,B]').children;
-  test.throws(function() { Tree.get_mapping_between(ns2, cs2) }
+  test.throws(function() { Tree.getRelationBetween(ns2, cs2) }
              ,"structures don't match");
 
   var ns3 = set_ids(Tree.parse('[A,A]').children);
-  test.throws(function() { Tree.get_mapping_between(ns3, ns3) }
+  test.throws(function() { Tree.getRelationBetween(ns3, ns3) }
              ,"duplicate ids");
 
   test.done();
@@ -595,11 +595,11 @@ exports['get_mapping_between'] = function(test) {
 exports['get_by_value'] = function(test) {
   var t1 = Tree.parse('[A,B[B,b],B,C[C[x,y,z[1,2]]]]')
 
-  var r0 = Tree.get_by_value('A', t1.children);
+  var r0 = Tree.filterByValue('A', t1.children);
   test.equals(r0.length, 1);
   test.equals(r0[0], t1.children[0]);
 
-  var r1 = Tree.get_by_value('B', t1.children);
+  var r1 = Tree.filterByValue('B', t1.children);
   test.equals(r1.length, 3);
   test.equals(r1[0], t1.children[1]);
   test.equals(r1[1], t1.children[1].children[0]);
@@ -611,10 +611,10 @@ exports['get_by_value'] = function(test) {
   test.equals(r1b[1], t1.children[1].children[0]);
   test.equals(r1b[2], t1.children[2]);
 
-  var r2 = Tree.get_by_value('ab', t1.children);
+  var r2 = Tree.filterByValue('ab', t1.children);
   test.equals(r2.length, 0);
 
-  var r3 = Tree.get_by_value('', t1.children);
+  var r3 = Tree.filterByValue('', t1.children);
   test.equals(r3.length, 0);
 
   test.done()
@@ -622,49 +622,49 @@ exports['get_by_value'] = function(test) {
 
 exports['get_by_id'] = function(test){
   var t1 = Tree.parse('[A,B[a,b],C');
-  Tree.for_each(function (n) { n.id = '#'+n.value }, t1);
+  Tree.forEach(function (n) { n.id = '#'+n.value }, t1);
 
-  test.equals(Tree.get_by_id('#B', t1), t1.children[1]);
-  test.equals(Tree.get_by_id('#b', t1), t1.children[1].children[1]);
-  test.equals(Tree.get_by_id('D', t1), null);
+  test.equals(Tree.selectById('#B', t1), t1.children[1]);
+  test.equals(Tree.selectById('#b', t1), t1.children[1].children[1]);
+  test.equals(Tree.selectById('D', t1), null);
 
   test.done()
 }
 
 exports['get_child'] = function(test){
   var t1 = Tree.parse('[A,B[a,b],C,D[j[x,y,z[1,2]]]]')
-  test.equals(Tree.get_child([0],t1).value, 'A')
-  test.equals(Tree.get_child([1],t1).value, 'B')
-  test.equals(Tree.get_child([1, 1],t1).value, 'b')
-  test.equals(Tree.get_child([3,0,2,1],t1).value, '2')
-  test.equals(Tree.get_child([4],t1), null);
-  test.equals(Tree.get_child([1,3],t1), null);
-  test.equals(Tree.get_child([1,0,0],t1), null);
+  test.equals(Tree.getChild([0],t1).value, 'A')
+  test.equals(Tree.getChild([1],t1).value, 'B')
+  test.equals(Tree.getChild([1, 1],t1).value, 'b')
+  test.equals(Tree.getChild([3,0,2,1],t1).value, '2')
+  test.equals(Tree.getChild([4],t1), null);
+  test.equals(Tree.getChild([1,3],t1), null);
+  test.equals(Tree.getChild([1,0,0],t1), null);
 
   test.done()
 }
 
 exports['get_parent'] = function(test){
   var t1 = Tree.parse('[A,B[a,b],C,D[j[x,y,z[1,2]]]]')
-  var n = Tree.get_child([3,0,2,1], t1);
-  test.equals(Tree.get_parent(0, n).value, '2');
-  test.equals(Tree.get_parent(1, n).value, 'z');
-  test.equals(Tree.get_parent(2, n).value, 'j');
-  test.equals(Tree.get_parent(3, n).value, 'D');
-  test.equals(Tree.get_parent(4, n).value, '');
-  test.equals(Tree.get_parent(5, n), null);
+  var n = Tree.getChild([3,0,2,1], t1);
+  test.equals(Tree.getAncestor(0, n).value, '2');
+  test.equals(Tree.getAncestor(1, n).value, 'z');
+  test.equals(Tree.getAncestor(2, n).value, 'j');
+  test.equals(Tree.getAncestor(3, n).value, 'D');
+  test.equals(Tree.getAncestor(4, n).value, '');
+  test.equals(Tree.getAncestor(5, n), null);
 
   test.done()
 }
 
-exports['get_path'] = function(test){
+exports['getPath'] = function(test){
   var t1 = Tree.parse('[A,B[a,b],C,D[j[x,y,z[1,2]]]]')
 
-  test.deepEqual(Tree.get_path(t1.children[0]), [0])
-  test.deepEqual(Tree.get_path(t1.children[1]), [1])
-  test.deepEqual(Tree.get_path(t1.children[1].children[1]), [1,1])
-  test.deepEqual(Tree.get_path(Tree.get_child([3,0,2,1], t1)), [3,0,2,1])
-  test.deepEqual(Tree.get_path(Tree.get_child([3,0,2,1], t1)), [3,0,2,1])
+  test.deepEqual(Tree.getPath(t1.children[0]), [0])
+  test.deepEqual(Tree.getPath(t1.children[1]), [1])
+  test.deepEqual(Tree.getPath(t1.children[1].children[1]), [1,1])
+  test.deepEqual(Tree.getPath(Tree.getChild([3,0,2,1], t1)), [3,0,2,1])
+  test.deepEqual(Tree.getPath(Tree.getChild([3,0,2,1], t1)), [3,0,2,1])
 
   test.done()
 }
@@ -674,49 +674,49 @@ exports['get_leaf_nodes'] = function(test){
   var t2 = Tree.parse('[A,B,C]')
   var t3 = Tree.parse('[]')
   var f = function (n) { return n.value }
-  test.deepEqual(Tree.get_leaf_nodes(t1).map(f), ['A', 'a', 'b', 'C', 'x', 'y', '1', '2'])
-  test.deepEqual(Tree.get_leaf_nodes(t2).map(f), ['A', 'B', 'C'])
-  test.deepEqual(Tree.get_leaf_nodes(t3).map(f), [''])
+  test.deepEqual(Tree.getLeafNodes(t1).map(f), ['A', 'a', 'b', 'C', 'x', 'y', '1', '2'])
+  test.deepEqual(Tree.getLeafNodes(t2).map(f), ['A', 'B', 'C'])
+  test.deepEqual(Tree.getLeafNodes(t3).map(f), [''])
   test.done()
 }
 
 exports['nodes_to_range'] = function (test) {
   var t1 = Tree.parse('[A,B[a,b],C,D[j[x,y,z[1,2]]]]');
 
-  var r1 = Tree.nodes_to_range([t1.children[0]]);
+  var r1 = Tree.getRange([t1.children[0]]);
   test.equals(r1.length, 1);
   test.equals(r1[0], t1.children[0]);
 
-  var r2 = Tree.nodes_to_range([t1.children[1], t1.children[3]]);
+  var r2 = Tree.getRange([t1.children[1], t1.children[3]]);
   test.equals(r2.length, 3);
   test.equals(r2[0], t1.children[1]);
   test.equals(r2[1], t1.children[2]);
   test.equals(r2[2], t1.children[3]);
 
-  var r3 = Tree.nodes_to_range([Tree.get_child([3,0,1],t1)
-                               ,Tree.get_child([3,0,2,0],t1)
-                               ,Tree.get_child([3,0,2,1],t1)]);
+  var r3 = Tree.getRange([Tree.getChild([3,0,1],t1)
+                               ,Tree.getChild([3,0,2,0],t1)
+                               ,Tree.getChild([3,0,2,1],t1)]);
   test.equals(r3.length, 2);
-  test.equals(r3[0], Tree.get_child([3,0,1],t1));
-  test.equals(r3[1], Tree.get_child([3,0,2],t1));
+  test.equals(r3[0], Tree.getChild([3,0,1],t1));
+  test.equals(r3[1], Tree.getChild([3,0,2],t1));
 
-  var r4 = Tree.nodes_to_range([Tree.get_child([1,0],t1)
-                               ,Tree.get_child([3,0,2,1],t1)]);
+  var r4 = Tree.getRange([Tree.getChild([1,0],t1)
+                               ,Tree.getChild([3,0,2,1],t1)]);
   test.equals(r4.length, 3);
   test.equals(r4[0], t1.children[1]);
   test.equals(r4[1], t1.children[2]);
   test.equals(r4[2], t1.children[3]);
 
-  var r5 = Tree.nodes_to_range([t1.children[1], t1.children[1].children[0]]);
+  var r5 = Tree.getRange([t1.children[1], t1.children[1].children[0]]);
   test.equals(r5.length, 1);
   test.equals(r5[0], t1.children[1]);
 
   var t2 = Tree.parse('[A[a,b,c,d]]');
-  var r6 = Tree.nodes_to_range([Tree.get_child([0,0], t2), Tree.get_child([0,2], t2)]);
+  var r6 = Tree.getRange([Tree.getChild([0,0], t2), Tree.getChild([0,2], t2)]);
   test.equals(r6.length, 3);
 
   var t3 = Tree.parse('[a,b,c,d,e,f]');
-  var r7 = Tree.nodes_to_range([t3.children[4], t3.children[5]]);
+  var r7 = Tree.getRange([t3.children[4], t3.children[5]]);
   test.equals(r7.length, 2);
   test.equals(r7[0].value, 'e');
   test.equals(r7[1].value, 'f');
@@ -727,21 +727,21 @@ exports['nodes_to_range'] = function (test) {
 exports['get_cca'] = function(test) {
   var t1 = Tree.parse('[A,B[a,b],C,D[j[x,y,z[1,2]]]]');
 
-  var a = Tree.get_child([1,0], t1);
-  var b = Tree.get_child([1,1], t1);
-  var B = Tree.get_child([1], t1);
-  var j = Tree.get_child([3,0], t1);
-  var x = Tree.get_child([3,0,0], t1);
-  var _2 = Tree.get_child([3,0,2,1], t1);
-  test.equals(Tree.get_cca([a]), B);
-  test.equals(Tree.get_cca([a,b]), B);
-  test.equals(Tree.get_cca([x,_2]), j);
-  test.equals(Tree.get_cca([b,_2]), t1);
+  var a = Tree.getChild([1,0], t1);
+  var b = Tree.getChild([1,1], t1);
+  var B = Tree.getChild([1], t1);
+  var j = Tree.getChild([3,0], t1);
+  var x = Tree.getChild([3,0,0], t1);
+  var _2 = Tree.getChild([3,0,2,1], t1);
+  test.equals(Tree.getClosestCommonAncestor([a]), B);
+  test.equals(Tree.getClosestCommonAncestor([a,b]), B);
+  test.equals(Tree.getClosestCommonAncestor([x,_2]), j);
+  test.equals(Tree.getClosestCommonAncestor([b,_2]), t1);
 
   test.done();
 }
 
-exports['is_range'] = function(test) {
+exports['isRange'] = function(test) {
   var t1 = Tree.parse('[A,B[a,b],C,D]');
   var A = t1.children[0]
     , B = t1.children[1]
@@ -749,20 +749,20 @@ exports['is_range'] = function(test) {
     , D = t1.children[3]
     , a = B.children[0]
     , b = B.children[1];
-  test.ok(Tree.is_range([A,B,C,D]));
-  test.ok(Tree.is_range([C]));
-  test.ok(!Tree.is_range([D,C]));
-  test.ok(Tree.is_range([a,b]));
-  test.ok(!Tree.is_range([B,a]));
+  test.ok(Tree.isRange([A,B,C,D]));
+  test.ok(Tree.isRange([C]));
+  test.ok(!Tree.isRange([D,C]));
+  test.ok(Tree.isRange([a,b]));
+  test.ok(!Tree.isRange([B,a]));
   test.done();
 }
 
 exports['is_root'] = function(test) {
   var t1 = Tree.parse('A,B[a]');
 
-  test.ok(Tree.is_root(t1[0]));
-  test.ok(Tree.is_root(t1[1]));
-  test.ok(!Tree.is_root(t1[1].children[0]));
+  test.ok(Tree.isRoot(t1[0]));
+  test.ok(Tree.isRoot(t1[1]));
+  test.ok(!Tree.isRoot(t1[1].children[0]));
 
   test.done();
 }
@@ -770,18 +770,18 @@ exports['is_root'] = function(test) {
 exports['get_root'] = function (test) {
   var t1 = Tree.parse('[A,B[a]]');
 
-  test.equals(Tree.get_root(t1.children[0]), t1);
-  test.equals(Tree.get_root(t1.children[1]), t1);
-  test.equals(Tree.get_root(t1.children[1].children[0]), t1);
+  test.equals(Tree.getRoot(t1.children[0]), t1);
+  test.equals(Tree.getRoot(t1.children[1]), t1);
+  test.equals(Tree.getRoot(t1.children[1].children[0]), t1);
 
   test.done();
 }
 
-exports['get_idx'] = function (test) {
+exports['getPosition'] = function (test) {
   var t1 = Tree.parse('[A,B[a],C]');
 
-  test.equals(Tree.get_idx(t1.children[0]), 0);
-  test.equals(Tree.get_idx(t1), -1);
+  test.equals(Tree.getPosition(t1.children[0]), 0);
+  test.equals(Tree.getPosition(t1), -1);
 
   test.done();
 }

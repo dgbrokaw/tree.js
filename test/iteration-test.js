@@ -3,20 +3,20 @@ var Tree = require("../dist/index.js").Tree;
 exports["Iteration: forEach"] = function(test) {
   var t0 = Tree.parse('');
   var res = [];
-  Tree.for_each(function (n) { res.push(n.value) }, t0.children);
+  Tree.forEach(function (n) { res.push(n.value) }, t0.children);
   test.equals(res.length, 0);
 
   var t1 = Tree.parse('A,B');
   res = [];
-  Tree.for_each(function (n) { res.push(n.value) }, t1);
+  Tree.forEach(function (n) { res.push(n.value) }, t1);
   test.deepEqual(res, ['A','B']);
 
   var t2 = Tree.parse('[A[A1,A2],B,C[C1[C11]]]');
   res = [];
-  Tree.for_each(function (n) { res.push(n.value) }, t2.children);
+  Tree.forEach(function (n) { res.push(n.value) }, t2.children);
   test.deepEqual(res, ['A','A1','A2','B','C','C1','C11']);
   res = [];
-  Tree.for_each(function (n) { res.push(n.value) }, t2.children[0]);
+  Tree.forEach(function (n) { res.push(n.value) }, t2.children[0]);
   test.deepEqual(res, ['A','A1','A2']);
 
   test.done();
@@ -68,11 +68,11 @@ exports['Iteration: select'] = function(test) {
   var true_fn = function() {return true};
   var false_fn = function() {return false};
   var t0 = Tree.parse('');
-  var res = Tree.select_first(true_fn, t0.children);
+  var res = Tree.select(true_fn, t0.children);
   test.equals(res, null);
 
   var t1 = Tree.parse('A,B');
-  res = Tree.select_first(true_fn, t1);
+  res = Tree.select(true_fn, t1);
   test.equals(res, t1[0]);
 
   var t1b = Tree.parse('[B,C]');
@@ -80,13 +80,13 @@ exports['Iteration: select'] = function(test) {
   test.equals(res, t1b.children[0]);
 
   var t2 = Tree.parse('[A]');
-  res = Tree.select_first(false_fn, t2.children[0]);
+  res = Tree.select(false_fn, t2.children[0]);
   test.equals(res, null);
 
   var t3 = Tree.parse('[A[A1,A2],BB,C[C1[C11]]]');
-  res = Tree.select_first(function (n) { return n.value.length == 3 }, t3.children);
+  res = Tree.select(function (n) { return n.value.length == 3 }, t3.children);
   test.equals(res, t3.children[2].children[0].children[0]);
-  res = Tree.select_first(false_fn, t3.children[0]);
+  res = Tree.select(false_fn, t3.children[0]);
   test.equals(res, null);
 
   test.done();
@@ -131,11 +131,11 @@ exports["Iteration: filterRange"] = function(test) {
 
 exports["Iteration: getAllNodes"] = function(test) {
   var t0 = Tree.parse('');
-  var res = Tree.select_all(t0.children);
+  var res = Tree.getAllNodes(t0.children);
   test.equals(res.length, 0);
 
   var t1 = Tree.parse('[A[A1,A2],B,C[C1[C11]]]');
-  res = Tree.select_all(t1.children);
+  res = Tree.getAllNodes(t1.children);
   res = res.map(function (n) { return n.value }).join(' ');
   test.deepEqual(res, 'A A1 A2 B C C1 C11');
 
@@ -152,21 +152,21 @@ exports['Iteration: getLeafNodes'] = function(test){
   var t2 = Tree.parse('[A,B,C]')
   var t3 = Tree.parse('[]')
   var f = function (n) { return n.value }
-  test.deepEqual(Tree.get_leaf_nodes(t1).map(f), ['A', 'a', 'b', 'C', 'x', 'y', '1', '2'])
-  test.deepEqual(Tree.get_leaf_nodes(t2).map(f), ['A', 'B', 'C'])
+  test.deepEqual(Tree.getLeafNodes(t1).map(f), ['A', 'a', 'b', 'C', 'x', 'y', '1', '2'])
+  test.deepEqual(Tree.getLeafNodes(t2).map(f), ['A', 'B', 'C'])
   test.deepEqual(t2.getLeafNodes().map(f), ['A', 'B', 'C'])
-  test.deepEqual(Tree.get_leaf_nodes(t3).map(f), [''])
+  test.deepEqual(Tree.getLeafNodes(t3).map(f), [''])
   test.done()
 }
 
 exports['Iteration: filterByValue'] = function(test) {
   var t1 = Tree.parse('[A,B[B,b],B,C[C[x,y,z[1,2]]]]')
 
-  var r0 = Tree.get_by_value('A', t1.children);
+  var r0 = Tree.filterByValue('A', t1.children);
   test.equals(r0.length, 1);
   test.equals(r0[0], t1.children[0]);
 
-  var r1 = Tree.get_by_value('B', t1.children);
+  var r1 = Tree.filterByValue('B', t1.children);
   test.equals(r1.length, 3);
   test.equals(r1[0], t1.children[1]);
   test.equals(r1[1], t1.children[1].children[0]);
@@ -178,10 +178,10 @@ exports['Iteration: filterByValue'] = function(test) {
   test.equals(r1b[1], t1.children[1].children[0]);
   test.equals(r1b[2], t1.children[2]);
 
-  var r2 = Tree.get_by_value('ab', t1.children);
+  var r2 = Tree.filterByValue('ab', t1.children);
   test.equals(r2.length, 0);
 
-  var r3 = Tree.get_by_value('', t1.children);
+  var r3 = Tree.filterByValue('', t1.children);
   test.equals(r3.length, 0);
 
   test.done()
@@ -189,12 +189,12 @@ exports['Iteration: filterByValue'] = function(test) {
 
 exports['Iteration: selectById'] = function(test) {
   var t1 = Tree.parse('[A,B[a,b],C');
-  Tree.for_each(function (n) { n.id = '#'+n.value }, t1);
+  Tree.forEach(function (n) { n.id = '#'+n.value }, t1);
 
-  test.equals(Tree.get_by_id('#B', t1), t1.children[1]);
-  test.equals(Tree.get_by_id('#b', t1), t1.children[1].children[1]);
+  test.equals(Tree.selectById('#B', t1), t1.children[1]);
+  test.equals(Tree.selectById('#b', t1), t1.children[1].children[1]);
   test.equals(t1.selectById('#b'), t1.children[1].children[1]);
-  test.equals(Tree.get_by_id('D', t1), null);
+  test.equals(Tree.selectById('D', t1), null);
 
   test.done()
 }

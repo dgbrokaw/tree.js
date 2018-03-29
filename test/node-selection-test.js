@@ -29,12 +29,12 @@ exports["NodeSelection: selection get/set shorthands"] = function(test) {
 
 exports["NodeSelection: closest common ancestor"] = function(test) {
   var t1 = Tree.parse('[A,B[a,b],C,D[j[x,y,z[1,2]]]]');
-  var a = Tree.get_child([1,0], t1);
-  var b = Tree.get_child([1,1], t1);
-  var B = Tree.get_child([1], t1);
-  var j = Tree.get_child([3,0], t1);
-  var x = Tree.get_child([3,0,0], t1);
-  var _2 = Tree.get_child([3,0,2,1], t1);
+  var a = Tree.getChild([1,0], t1);
+  var b = Tree.getChild([1,1], t1);
+  var B = Tree.getChild([1], t1);
+  var j = Tree.getChild([3,0], t1);
+  var x = Tree.getChild([3,0,0], t1);
+  var _2 = Tree.getChild([3,0,2,1], t1);
 
   var sel1 = new NodeSelection([a]);
   var sel2 = new NodeSelection([a,b]);
@@ -69,17 +69,17 @@ exports["NodeSelection: ranges"] = function(test) {
   test.equals(r2[1], t1.children[2]);
   test.equals(r2[2], t1.children[3]);
 
-  var sel3 = new NodeSelection([Tree.get_child([3,0,1],t1)
-                               ,Tree.get_child([3,0,2,0],t1)
-                               ,Tree.get_child([3,0,2,1],t1)]);
+  var sel3 = new NodeSelection([Tree.getChild([3,0,1],t1)
+                               ,Tree.getChild([3,0,2,0],t1)
+                               ,Tree.getChild([3,0,2,1],t1)]);
   test.ok(!sel3.isRange());
   var r3 = sel3.range;
   test.equals(r3.length, 2);
-  test.equals(r3[0], Tree.get_child([3,0,1],t1));
-  test.equals(r3[1], Tree.get_child([3,0,2],t1));
+  test.equals(r3[0], Tree.getChild([3,0,1],t1));
+  test.equals(r3[1], Tree.getChild([3,0,2],t1));
 
-  var sel4 = new NodeSelection([Tree.get_child([1,0],t1)
-                               ,Tree.get_child([3,0,2,1],t1)]);
+  var sel4 = new NodeSelection([Tree.getChild([1,0],t1)
+                               ,Tree.getChild([3,0,2,1],t1)]);
   test.ok(!sel4.isRange());
   var r4 = sel4.range;
   test.equals(r4.length, 3);
@@ -94,7 +94,7 @@ exports["NodeSelection: ranges"] = function(test) {
   test.equals(r5[0], t1.children[1]);
 
   var t2 = Tree.parse('[A[a,b,c,d]]');
-  var sel6 = new NodeSelection([Tree.get_child([0,0], t2), Tree.get_child([0,2], t2)]);
+  var sel6 = new NodeSelection([Tree.getChild([0,0], t2), Tree.getChild([0,2], t2)]);
   test.ok(!sel6.isRange());
   var r6 = sel6.range;
   test.equals(r6.length, 3);

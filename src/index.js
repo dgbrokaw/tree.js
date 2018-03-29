@@ -3,21 +3,6 @@ import Tree from "./tree.js";
 import Node from "./tree-node.js";
 Tree.Node = Node;
 
-import validateTree from "./validate.js";
-Tree.validate = validateTree;
-
-import id from "./helpers/id.js";
-Tree.uid = id;
-
-import cloneTree from "./clone.js";
-Tree.clone = cloneTree;
-
-import relationBetweenTrees from "./relate.js";
-Tree.get_mapping_between = relationBetweenTrees;
-
-import oneToOneRelationBetweenTrees from "./relate-one-to-one.js";
-Tree.get_1to1_mapping_between = oneToOneRelationBetweenTrees;
-
 import TreeBuilder from "./tree-builder.js";
 
 import StringParseDirector from "./build-from-string.js";
