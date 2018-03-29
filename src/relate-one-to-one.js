@@ -7,9 +7,8 @@
  * If not in strict mode, the structure mismatch is ignored and all a partial
  * mapping is returned.
  */
-export default function oneToOneRelationBetweenTrees(source_tree, target_tree, strict) {
+export default function oneToOneRelationBetweenTrees(sourceTree, targetTree, strict=true) {
   var relation = {};
-  if (arguments.length < 3) strict = true;
 
   function relationfn(source, target) {
     if (strict && source.id in relation) throw "duplicate id in source tree";
@@ -23,14 +22,14 @@ export default function oneToOneRelationBetweenTrees(source_tree, target_tree, s
     }
   }
 
-  if (Array.isArray(source_tree)) {
-    if (strict && source_tree.length !== target_tree.length) throw "tree structures don't match";
-    var slen = source_tree.length, tlen = target_tree.length;
+  if (Array.isArray(sourceTree)) {
+    if (strict && sourceTree.length !== targetTree.length) throw "tree structures don't match";
+    var slen = sourceTree.length, tlen = targetTree.length;
     for (var i=0; i<slen; i++) {
-      if (i<tlen) relationfn(source_tree[i], target_tree[i]);
-      else source_tree[i].forEach(function(s) { relation[s.id] = []});
+      if (i<tlen) relationfn(sourceTree[i], targetTree[i]);
+      else sourceTree[i].forEach(function(s) { relation[s.id] = []});
     }
-  } else relationfn(source_tree, target_tree);
+  } else relationfn(sourceTree, targetTree);
 
   return relation;
 }

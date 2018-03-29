@@ -18,7 +18,7 @@
  * node, the method throws an exception. It also throws an exception if there
  * are duplicate ids in the source tree.
  */
-export default function relationBetweenTrees(source_tree, target_tree) {
+export default function relationBetweenTrees(sourceTree, targetTree) {
   var relation = {};
 
   function relationfn(source, target) {
@@ -33,10 +33,10 @@ export default function relationBetweenTrees(source_tree, target_tree) {
     }
   }
 
-  if (Array.isArray(source_tree)) {
-    if (source_tree.length !== target_tree.length) throw "tree structures don't match";
-    for (var i=0; i<source_tree.length; i++) relationfn(source_tree[i], target_tree[i]);
-  } else relationfn(source_tree, target_tree);
+  if (Array.isArray(sourceTree)) {
+    if (sourceTree.length !== targetTree.length) throw "tree structures don't match";
+    for (var i=0; i<sourceTree.length; i++) relationfn(sourceTree[i], targetTree[i]);
+  } else relationfn(sourceTree, targetTree);
 
   return relation;
 }
