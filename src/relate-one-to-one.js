@@ -19,7 +19,7 @@ export default function oneToOneRelationBetweenTrees(source_tree, target_tree, s
     var slen = source.children.length, tlen = target.children.length;
     for (var i=0; i<slen; i++) {
       if (i<tlen) relationfn(source.children[i], target.children[i]);
-      else source.children[i].for_each(function(s) { relation[s.id] = []});
+      else source.children[i].forEach(function(s) { relation[s.id] = []});
     }
   }
 
@@ -28,7 +28,7 @@ export default function oneToOneRelationBetweenTrees(source_tree, target_tree, s
     var slen = source_tree.length, tlen = target_tree.length;
     for (var i=0; i<slen; i++) {
       if (i<tlen) relationfn(source_tree[i], target_tree[i]);
-      else source_tree[i].for_each(function(s) { relation[s.id] = []});
+      else source_tree[i].forEach(function(s) { relation[s.id] = []});
     }
   } else relationfn(source_tree, target_tree);
 

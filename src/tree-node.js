@@ -186,11 +186,23 @@ export default class Node {
   getOneToOneRelationTo(targetNode, strict) {
     return oneToOneRelationBetweenTrees(this, target, strict);
   }
+
+  forEach(fn) {
+    iteration.forEach(fn, this);
+  }
+
+  map(fn) {
+    return iteration.map(fn, this);
+  }
+
+  filter(selector) {
+    return iteration.filter(selector, this);
+  }
 }
 
-Node.prototype.for_each = function(f) { return Tree.for_each(f, this) }
-Node.prototype.map = function(f) { return Tree.map(f, this) }
-Node.prototype.filter = function(f) { return Tree.filter(f, this) }
+// Node.prototype.for_each = function(f) { return Tree.for_each(f, this) }
+// Node.prototype.map = function(f) { return Tree.map(f, this) }
+// Node.prototype.filter = function(f) { return Tree.filter(f, this) }
 Node.prototype.filterRange = function(f, no_overlap) { return Tree.filterRange(f, this, no_overlap) }
 Node.prototype.select_all = function() { return Tree.select_all(this) }
 Node.prototype.select_first = function(f) { return Tree.select_first(f, this) }

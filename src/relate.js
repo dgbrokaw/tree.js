@@ -26,7 +26,7 @@ export default function relationBetweenTrees(source_tree, target_tree) {
     relation[source.id] = [target];
     if (source.children.length !== target.children.length) {
       if (!source.hasChildren()) relation[source.id] = target.select_all();
-      else if (!target.hasChildren()) source.for_each(function(s) { relation[s.id] = [target]});
+      else if (!target.hasChildren()) source.forEach(function(s) { relation[s.id] = [target]});
       else throw "tree structures don't match";
     } else {
       for (var i=0; i<source.children.length; i++) relationfn(source.children[i], target.children[i]);
