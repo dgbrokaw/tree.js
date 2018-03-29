@@ -1,4 +1,3 @@
-import Tree from "./tree.js";
 import id from "./helpers/id.js";
 import asArray from "./helpers/as-array.js";
 import validate from "./validate.js";
@@ -52,8 +51,7 @@ export default class Node {
     return !this.parent;
   }
 
-  /// Returns the tree that a node belongs to by following the .parent references. Returns
-  /// null if the top-most parent is not a Tree.
+  /// Returns the tree that a node belongs to by following the .parent references.
   get root() {
     let node = this;
     while (node.parent) node = node.parent;

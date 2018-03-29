@@ -1,5 +1,5 @@
 import asArray from "./helpers/as-array.js";
-import Tree from "./tree.js";
+import { stringifyTree } from "./serialization.js";
 
 export default class NodeSelection {
   constructor(nodes) {
@@ -61,14 +61,14 @@ export default class NodeSelection {
       return [nodes[0]];
     }
 
-    let tree = Tree.get_root(nodes[0]);
+    let tree = nodes[0].root;
 
     let data = ccaHelper(nodes, tree);
 
     // get the cca's left-most and right-most child that contains one of the nodes
     let rm=-1, lm=data.closestCommonAncestor.children.length, i;
     for (i=0; i<nodes.length; i++) {
-      let n = Tree.get_child(data.paths[i].slice(0, data.commonPathLength+1), tree);
+      let n = tree.getChild(data.paths[i].slice(0, data.commonPathLength+1));
       let idx = data.closestCommonAncestor.children.indexOf(n);
       if (idx > rm) rm = idx;
       if (idx < lm) lm = idx;
@@ -92,7 +92,7 @@ export default class NodeSelection {
   }
 
   toString() {
-    return "[" + this._selection.map(n => Tree.stringify(n)) + "]";
+    return "[" + this._selection.map(n => stringifyTree(n)) + "]";
   }
 }
 
@@ -103,14 +103,14 @@ function ccaHelper(nodes, tree) {
     throw "[NodeSelection] Attempting to find the closest common ancestor of an empty selection.";
   }
 
-  let paths = nodes.map(node => Tree.get_path(node));
+  let paths = nodes.map(node => node.path);
 
   let commonPathLength = 0;
   while (pathsMatchAtDepth(paths, commonPathLength)) {
     commonPathLength++;
   }
 
-  let closestCommonAncestor = Tree.get_child(paths[0].slice(0, commonPathLength), tree || Tree.get_root(nodes[0]));
+  let closestCommonAncestor = (tree || nodes[0].root).getChild(paths[0].slice(0, commonPathLength));
 
   return { paths, commonPathLength, closestCommonAncestor };
 }
