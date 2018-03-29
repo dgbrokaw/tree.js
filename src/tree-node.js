@@ -6,6 +6,8 @@ import clone from "./clone.js";
 import relationBetweenTrees from "./relate.js";
 import oneToOneRelationBetweenTrees from "./relate-one-to-one.js";
 import DepthFirstTreeIterator from "./iterator-depth-first.js";
+import * as iteration from "./iteration.js";
+import { stringifyTree } from "./serialization.js";
 
 export default class Node {
   constructor() {
@@ -168,7 +170,33 @@ export default class Node {
   createIterator() {
     return new (this.iterator)(this);
   }
+
+  stringify() {
+    return stringifyTree(this);
+  }
+
+  clone(keep_ids, fields_to_clone) {
+    return clone(this, keep_ids, fields_to_clone);
+  }
+
+  getRelationTo(targetNode) {
+    return relationBetweenTrees(this, target);
+  }
+
+  getOneToOneRelationTo(targetNode, strict) {
+    return oneToOneRelationBetweenTrees(this, target, strict);
+  }
 }
+
+Node.prototype.for_each = function(f) { return Tree.for_each(f, this) }
+Node.prototype.map = function(f) { return Tree.map(f, this) }
+Node.prototype.filter = function(f) { return Tree.filter(f, this) }
+Node.prototype.filterRange = function(f, no_overlap) { return Tree.filterRange(f, this, no_overlap) }
+Node.prototype.select_all = function() { return Tree.select_all(this) }
+Node.prototype.select_first = function(f) { return Tree.select_first(f, this) }
+Node.prototype.get_leaf_nodes = function() { return Tree.get_leaf_nodes(this) }
+Node.prototype.get_by_value = function(value) { return Tree.get_by_value(value, this) }
+Node.prototype.get_by_id = function(id) { return Tree.get_by_id(id, this) }
 
 // These two functions must be called with a "this" context.
 function linkChildForPosition(position, newChild) {
@@ -225,18 +253,3 @@ function unlinkRightSibling(position, nodes, siblings) {
 function unlinkParent(nodes) {
   nodes.forEach(n => n.parent = null);
 }
-
-Node.prototype.stringify = function() { return Tree.stringify(this) }
-Node.prototype.clone = function(keep_ids, fields_to_clone) { return clone(this, keep_ids, fields_to_clone) }
-Node.prototype.get_mapping_to = function(target) { return relationBetweenTrees(this, target) }
-Node.prototype.get_1to1_mapping_to = function(target, strict) { return oneToOneRelationBetweenTrees(this, target, strict) }
-
-Node.prototype.for_each = function(f) { return Tree.for_each(f, this) }
-Node.prototype.map = function(f) { return Tree.map(f, this) }
-Node.prototype.filter = function(f) { return Tree.filter(f, this) }
-Node.prototype.filterRange = function(f, no_overlap) { return Tree.filterRange(f, this, no_overlap) }
-Node.prototype.select_all = function() { return Tree.select_all(this) }
-Node.prototype.select_first = function(f) { return Tree.select_first(f, this) }
-Node.prototype.get_leaf_nodes = function() { return Tree.get_leaf_nodes(this) }
-Node.prototype.get_by_value = function(value) { return Tree.get_by_value(value, this) }
-Node.prototype.get_by_id = function(id) { return Tree.get_by_id(id, this) }

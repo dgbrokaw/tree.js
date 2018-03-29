@@ -10,13 +10,10 @@ Most of the methods can accept both a single node or an array of nodes to work o
 */
 import asArray from "./helpers/as-array.js";
 import Node from "./tree-node.js";
-import TreeBuilder from "./tree-builder.js";
-import StringParseDirector from "./build-from-string.js";
 import NodeSelection from "./node-selection.js";
 import DepthFirstTreeIterator from "./iterator-depth-first.js";
 import * as iteration from "./iteration.js";
-import StringBuilder from "./string-builder.js";
-import TreeSerializeDirector from "./build-string-from-tree.js";
+import * as serialization from "./serialization.js";
 
 var Tree = { version: '1.3.7' };
 
@@ -27,13 +24,11 @@ Tree.create = function() {
 }
 
 Tree.parse = function(str) {
-  let director = new StringParseDirector(new TreeBuilder());
-  return director.construct(str);
+  return serialization.parseString(str);
 }
 
 Tree.stringify = function(nodes) {
-  let director = new TreeSerializeDirector(new StringBuilder());
-  return asArray(nodes).map(node => director.construct(node)).join(",");
+  return serialization.stringifyTree(nodes);
 }
 
 /// Returns the smallest range of nodes (continuous, ordered neighbors) covering the passed

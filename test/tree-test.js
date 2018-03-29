@@ -49,16 +49,16 @@ exports['parse'] = function(test) {
   test.done();
 }
 
-exports['stringify'] = function(test) {
-  test.equals(Tree.stringify(Tree.parse('A')), 'A');
-  test.equals(Tree.stringify(Tree.parse('[]')), '[]');
-  test.equals(Tree.stringify(Tree.parse('A,B')), 'A,B');
-  test.equals(Tree.stringify(Tree.parse('[A[A1,A2],B,C[C1[C11]]]')), '[A[A1,A2],B,C[C1[C11]]]');
-
-  test.equals(Tree.parse('[A[A1,A2],B,C[C1[C11]]]').stringify(), '[A[A1,A2],B,C[C1[C11]]]');
-
-  test.done();
-}
+// exports['stringify'] = function(test) {
+//   test.equals(Tree.stringify(Tree.parse('A')), 'A');
+//   test.equals(Tree.stringify(Tree.parse('[]')), '[]');
+//   test.equals(Tree.stringify(Tree.parse('A,B')), 'A,B');
+//   test.equals(Tree.stringify(Tree.parse('[A[A1,A2],B,C[C1[C11]]]')), '[A[A1,A2],B,C[C1[C11]]]');
+//
+//   test.equals(Tree.parse('[A[A1,A2],B,C[C1[C11]]]').stringify(), '[A[A1,A2],B,C[C1[C11]]]');
+//
+//   test.done();
+// }
 
 exports['uid'] = function(test) {
   var ids = [], hexp = /[\da-fA-F]{16}/;
@@ -491,7 +491,7 @@ exports['get_1to1_mapping_between'] = function(test) {
   var mappings = n1.map(function(node) {
     return {id: node.id, target: Tree.get_child(Tree.get_path(node), c1)};
   });
-  map = n1.get_1to1_mapping_to(c1);
+  map = Tree.get_1to1_mapping_between(n1, c1);
   mappings.forEach(function(mapping) {
     test.strictEqual(map[mapping.id][0], mapping.target);
   });
@@ -551,7 +551,7 @@ exports['get_mapping_between'] = function(test) {
   var mappings = n1.map(function(node) {
     return {id: node.id, target: Tree.get_child(Tree.get_path(node), c1)};
   });
-  map = n1.get_mapping_to(c1);
+  map = Tree.get_mapping_between(n1, c1);
   mappings.forEach(function(mapping) {
     test.strictEqual(map[mapping.id][0], mapping.target);
     test.equals(map[mapping.id].length, 1);
