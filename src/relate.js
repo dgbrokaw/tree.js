@@ -25,7 +25,7 @@ export default function relationBetweenTrees(source_tree, target_tree) {
     if (source.id in relation) throw "duplicate id in source tree";
     relation[source.id] = [target];
     if (source.children.length !== target.children.length) {
-      if (!source.hasChildren()) relation[source.id] = target.select_all();
+      if (!source.hasChildren()) relation[source.id] = target.getAllNodes();
       else if (!target.hasChildren()) source.forEach(function(s) { relation[s.id] = [target]});
       else throw "tree structures don't match";
     } else {

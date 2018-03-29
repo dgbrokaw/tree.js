@@ -163,14 +163,6 @@ export default class Node {
     return position;
   }
 
-  get iterator() {
-    return DepthFirstTreeIterator;
-  }
-
-  createIterator() {
-    return new (this.iterator)(this);
-  }
-
   stringify() {
     return stringifyTree(this);
   }
@@ -187,6 +179,14 @@ export default class Node {
     return oneToOneRelationBetweenTrees(this, target, strict);
   }
 
+  get iterator() {
+    return DepthFirstTreeIterator;
+  }
+
+  createIterator() {
+    return new (this.iterator)(this);
+  }
+
   forEach(fn) {
     iteration.forEach(fn, this);
   }
@@ -198,17 +198,31 @@ export default class Node {
   filter(selector) {
     return iteration.filter(selector, this);
   }
-}
 
-// Node.prototype.for_each = function(f) { return Tree.for_each(f, this) }
-// Node.prototype.map = function(f) { return Tree.map(f, this) }
-// Node.prototype.filter = function(f) { return Tree.filter(f, this) }
-Node.prototype.filterRange = function(f, no_overlap) { return Tree.filterRange(f, this, no_overlap) }
-Node.prototype.select_all = function() { return Tree.select_all(this) }
-Node.prototype.select_first = function(f) { return Tree.select_first(f, this) }
-Node.prototype.get_leaf_nodes = function() { return Tree.get_leaf_nodes(this) }
-Node.prototype.get_by_value = function(value) { return Tree.get_by_value(value, this) }
-Node.prototype.get_by_id = function(id) { return Tree.get_by_id(id, this) }
+  filterRange(selector, noOverlap) {
+    return iteration.filterRange(selector, this, noOverlap);
+  }
+
+  select(selector) {
+    return iteration.select(selector, this);
+  }
+
+  getAllNodes() {
+    return iteration.getAllNodes(this);
+  }
+
+  getLeafNodes() {
+    return iteration.getLeafNodes(this);
+  }
+
+  filterByValue(value) {
+    return iteration.filterByValue(value, this);
+  }
+
+  selectById(id) {
+    return iteration.selectById(id, this);
+  }
+}
 
 // These two functions must be called with a "this" context.
 function linkChildForPosition(position, newChild) {

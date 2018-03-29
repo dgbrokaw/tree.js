@@ -74,7 +74,6 @@ exports["Node: root"] = function(test) {
 exports['Node: single-child insertion'] = function(test) {
   var t0 = Tree.parse('');
   t0.insert(0, {value:'A', children:[]});
-  console.log(t0);
   test.equals(t0.stringify(), '[A]');
   test.doesNotThrow(function(){Tree.validate(t0)});
 

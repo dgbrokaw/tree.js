@@ -76,7 +76,7 @@ exports['Iteration: select'] = function(test) {
   test.equals(res, t1[0]);
 
   var t1b = Tree.parse('[B,C]');
-  res = t1b.select_first(function (n) { return n.value });
+  res = t1b.select(function (n) { return n.value });
   test.equals(res, t1b.children[0]);
 
   var t2 = Tree.parse('[A]');
@@ -140,7 +140,7 @@ exports["Iteration: getAllNodes"] = function(test) {
   test.deepEqual(res, 'A A1 A2 B C C1 C11');
 
   var t1b = Tree.parse('X[A[A1,A2],B,C[C1[C11]]]');
-  res = t1b.select_all();
+  res = t1b.getAllNodes();
   res = res.map(function (n) { return n.value }).join(' ');
   test.deepEqual(res, 'X A A1 A2 B C C1 C11');
 
@@ -154,7 +154,7 @@ exports['Iteration: getLeafNodes'] = function(test){
   var f = function (n) { return n.value }
   test.deepEqual(Tree.get_leaf_nodes(t1).map(f), ['A', 'a', 'b', 'C', 'x', 'y', '1', '2'])
   test.deepEqual(Tree.get_leaf_nodes(t2).map(f), ['A', 'B', 'C'])
-  test.deepEqual(t2.get_leaf_nodes().map(f), ['A', 'B', 'C'])
+  test.deepEqual(t2.getLeafNodes().map(f), ['A', 'B', 'C'])
   test.deepEqual(Tree.get_leaf_nodes(t3).map(f), [''])
   test.done()
 }
@@ -172,7 +172,7 @@ exports['Iteration: filterByValue'] = function(test) {
   test.equals(r1[1], t1.children[1].children[0]);
   test.equals(r1[2], t1.children[2]);
 
-  var r1b = t1.get_by_value('B');
+  var r1b = t1.filterByValue('B');
   test.equals(r1b.length, 3);
   test.equals(r1b[0], t1.children[1]);
   test.equals(r1b[1], t1.children[1].children[0]);
@@ -193,7 +193,7 @@ exports['Iteration: selectById'] = function(test) {
 
   test.equals(Tree.get_by_id('#B', t1), t1.children[1]);
   test.equals(Tree.get_by_id('#b', t1), t1.children[1].children[1]);
-  test.equals(t1.get_by_id('#b'), t1.children[1].children[1]);
+  test.equals(t1.selectById('#b'), t1.children[1].children[1]);
   test.equals(Tree.get_by_id('D', t1), null);
 
   test.done()
