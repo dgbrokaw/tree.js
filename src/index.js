@@ -11,6 +11,10 @@ import NodeSelection from "./node-selection.js";
 
 import DepthFirstTreeIterator from "./iterator-depth-first.js";
 
+import relationBetweenTrees from "./relate.js";
+
+import oneToOneRelationBetweenTrees from "./relate-one-to-one.js";
+
 import TreeRelation from "./tree-relation.js";
 
 import StringBuilder from "./string-builder.js";
@@ -27,4 +31,6 @@ export {
 , TreeRelation
 , StringBuilder
 , TreeSerializeDirector
+, relationBetweenTrees
+, oneToOneRelationBetweenTrees
 };
