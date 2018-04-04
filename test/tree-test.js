@@ -49,16 +49,16 @@ exports['parse'] = function(test) {
   test.done();
 }
 
-// exports['stringify'] = function(test) {
-//   test.equals(Tree.stringify(Tree.parse('A')), 'A');
-//   test.equals(Tree.stringify(Tree.parse('[]')), '[]');
-//   test.equals(Tree.stringify(Tree.parse('A,B')), 'A,B');
-//   test.equals(Tree.stringify(Tree.parse('[A[A1,A2],B,C[C1[C11]]]')), '[A[A1,A2],B,C[C1[C11]]]');
-//
-//   test.equals(Tree.parse('[A[A1,A2],B,C[C1[C11]]]').stringify(), '[A[A1,A2],B,C[C1[C11]]]');
-//
-//   test.done();
-// }
+exports['stringify'] = function(test) {
+  test.equals(Tree.stringify(Tree.parse('A')), 'A');
+  test.equals(Tree.stringify(Tree.parse('[]')), '[]');
+  test.equals(Tree.stringify(Tree.parse('A,B')), 'A,B');
+  test.equals(Tree.stringify(Tree.parse('[A[A1,A2],B,C[C1[C11]]]')), '[A[A1,A2],B,C[C1[C11]]]');
+
+  test.equals(Tree.parse('[A[A1,A2],B,C[C1[C11]]]').stringify(), '[A[A1,A2],B,C[C1[C11]]]');
+
+  test.done();
+}
 
 exports['uid'] = function(test) {
   var ids = [], hexp = /[\da-fA-F]{16}/;
