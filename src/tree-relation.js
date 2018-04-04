@@ -3,15 +3,12 @@ import pushNew from "./helpers/push-new.js";
 import relationBetweenTrees from "./relate.js";
 
 export default class TreeRelation {
-  constructor(sourceTree, targetTree) {
-    this.relation = {};
-    if (sourceTree && targetTree) {
-      this.init(sourceTree, targetTree);
-    }
+  constructor(relation) {
+    this.relation = relation;
   }
 
-  init(sourceTree, targetTree) {
-    this.relation = (this.relationStrategy)(sourceTree, targetTree);
+  init(relation) {
+    this.relation = relation;
   }
 
   relate(sourceNode) {
@@ -76,9 +73,5 @@ export default class TreeRelation {
     for (let id in this.relation) {
       this.relation[id] = this.relation[id].filter(n => t.includes(n));
     }
-  }
-
-  get relationStrategy() {
-    return relationBetweenTrees;
   }
 }
