@@ -170,11 +170,11 @@ export default class Node {
   }
 
   getRelationTo(targetNode) {
-    return relationBetweenTrees(this, target);
+    return relationBetweenTrees(this, targetNode);
   }
 
   getOneToOneRelationTo(targetNode, strict) {
-    return oneToOneRelationBetweenTrees(this, target, strict);
+    return oneToOneRelationBetweenTrees(this, targetNode, strict);
   }
 
   get iterator() {
