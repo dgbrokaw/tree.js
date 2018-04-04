@@ -6,7 +6,7 @@ exports["Iteration: forEach"] = function(test) {
   Tree.forEach(function (n) { res.push(n.value) }, t0.children);
   test.equals(res.length, 0);
 
-  var t1 = Tree.parse('A,B');
+  var t1 = Tree.parse('A[B]');
   res = [];
   Tree.forEach(function (n) { res.push(n.value) }, t1);
   test.deepEqual(res, ['A','B']);
@@ -29,7 +29,7 @@ exports["Iteration: map"] = function(test) {
   var res = Tree.map(f, t0.children);
   test.equals(res.length, 0);
 
-  var t1 = Tree.parse('A,B');
+  var t1 = Tree.parse('A[B]');
   res = Tree.map(f, t1);
   test.deepEqual(res, ['A','B']);
 
@@ -48,7 +48,7 @@ exports["Iteration: filter"] = function(test) {
   var res = Tree.filter(true_fn, t0.children);
   test.equals(res.length, 0);
 
-  var t1 = Tree.parse('A,B');
+  var t1 = Tree.parse('A[B]');
   res = Tree.filter(true_fn, t1);
   res = res.map(function (n) { return n.value });
   test.deepEqual(res, ['A','B']);
@@ -71,13 +71,13 @@ exports['Iteration: select'] = function(test) {
   var res = Tree.select(true_fn, t0.children);
   test.equals(res, null);
 
-  var t1 = Tree.parse('A,B');
+  var t1 = Tree.parse('A[B]');
   res = Tree.select(true_fn, t1);
-  test.equals(res, t1[0]);
+  test.equals(res, t1);
 
-  var t1b = Tree.parse('[B,C]');
+  var t1b = Tree.parse('[C]');
   res = t1b.select(function (n) { return n.value });
-  test.equals(res, t1b.children[0]);
+  test.equals(res, t1b.getChild([0]));
 
   var t2 = Tree.parse('[A]');
   res = Tree.select(false_fn, t2.children[0]);
@@ -103,8 +103,8 @@ exports["Iteration: filterRange"] = function(test) {
   var res = Tree.filterRange(true_fn, t0.children);
   test.equals(res.length, 0);
 
-  var t1 = Tree.parse('A,B,C');
-  res = Tree.filterRange(true_fn, t1);
+  var t1 = Tree.parse('[A,B,C]');
+  res = Tree.filterRange(true_fn, t1.children);
   res = ranges_to_arr(res);
   test.deepEqual(res, ['A', 'AB', 'ABC', 'B', 'BC', 'C']);
 

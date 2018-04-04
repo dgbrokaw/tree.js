@@ -6,7 +6,6 @@ var Tree = require('../dist/index.js').Tree;
 exports['parse'] = function(test) {
   var t0 = Tree.parse('');
   var t01 = Tree.parse('A');
-  var t02 = Tree.parse('A,B');
   var t1 = Tree.parse('[,]');
   var t2 = Tree.parse('[A,B]');
   var t3 = Tree.parse('[A[A1,A2],B,C[C1[C11]]]');
@@ -14,13 +13,6 @@ exports['parse'] = function(test) {
   test.equals(t0.children.length, 0);
   test.equals(t01.children.length, 0);
   test.equals(t01.value, 'A');
-  test.equals(t02.length, 2);
-  test.equals(t02[0].value, 'A');
-  test.equals(t02[0].rs.value, 'B');
-  test.equals(t02[0].parent, undefined);
-  test.equals(t02[1].value, 'B');
-  test.equals(t02[1].ls.value, 'A');
-  test.equals(t02[1].parent, undefined);
 
   test.equals(t1.value, '');
   test.equals(t1.children.length, 2);
@@ -52,7 +44,6 @@ exports['parse'] = function(test) {
 exports['stringify'] = function(test) {
   test.equals(Tree.stringify(Tree.parse('A')), 'A');
   test.equals(Tree.stringify(Tree.parse('[]')), '[]');
-  test.equals(Tree.stringify(Tree.parse('A,B')), 'A,B');
   test.equals(Tree.stringify(Tree.parse('[A[A1,A2],B,C[C1[C11]]]')), '[A[A1,A2],B,C[C1[C11]]]');
 
   test.equals(Tree.parse('[A[A1,A2],B,C[C1[C11]]]').stringify(), '[A[A1,A2],B,C[C1[C11]]]');
@@ -79,9 +70,6 @@ exports['validate'] = function(test) {
   var t2 = Tree.parse('[A[A1,A2],B,C[C1[C11]]]');
   test.doesNotThrow(function() {Tree.validate(t2)});
 
-  var t2b = Tree.parse('A[A1,A2],B,C[C1[C11]]');
-  test.doesNotThrow(function() {Tree.validate(t2b)});
-
   var t3 = Tree.parse('[A[A1,A2],B,C[C1[C11]]]');
   t3.children[2].children[0].children[0].parent = null;
   test.throws(function() {Tree.validate(t3)});
@@ -103,8 +91,8 @@ exports['validate'] = function(test) {
   test.throws(function(){Tree.validate(t6)});
   test.throws(function(){t6.validate()});
 
-  var t6b = Tree.parse('A[A1,A2],B,C[C1[C11]]');
-  t6b[0].children = t6b[0].children.slice(1);
+  var t6b = Tree.parse('A[A1,A2]');
+  t6b.children = t6b.children.slice(1);
   test.throws(function(){Tree.validate(t6b)});
 
   test.done();
@@ -276,11 +264,6 @@ exports['for_each'] = function(test) {
   Tree.forEach(function (n) { res.push(n.value) }, t0.children);
   test.equals(res.length, 0);
 
-  var t1 = Tree.parse('A,B');
-  res = [];
-  Tree.forEach(function (n) { res.push(n.value) }, t1);
-  test.deepEqual(res, ['A','B']);
-
   var t2 = Tree.parse('[A[A1,A2],B,C[C1[C11]]]');
   res = [];
   Tree.forEach(function (n) { res.push(n.value) }, t2.children);
@@ -298,10 +281,6 @@ exports['map'] = function(test) {
   var t0 = Tree.parse('');
   var res = Tree.map(f, t0.children);
   test.equals(res.length, 0);
-
-  var t1 = Tree.parse('A,B');
-  res = Tree.map(f, t1);
-  test.deepEqual(res, ['A','B']);
 
   var t1b = Tree.parse('A[B,C]');
   res = t1b.map(f);
@@ -321,11 +300,6 @@ exports['filter'] = function(test) {
   var t0 = Tree.parse('');
   var res = Tree.filter(true_fn, t0.children);
   test.equals(res.length, 0);
-
-  var t1 = Tree.parse('A,B');
-  res = Tree.filter(true_fn, t1);
-  res = res.map(function (n) { return n.value });
-  test.deepEqual(res, ['A','B']);
 
   var t1b = Tree.parse('A[B,C]');
   res = t1b.filter(true_fn);
@@ -353,11 +327,6 @@ exports['filterRange'] = function(test) {
   var t0 = Tree.parse('');
   var res = Tree.filterRange(true_fn, t0.children);
   test.equals(res.length, 0);
-
-  var t1 = Tree.parse('A,B,C');
-  res = Tree.filterRange(true_fn, t1);
-  res = ranges_to_arr(res);
-  test.deepEqual(res, ['A', 'AB', 'ABC', 'B', 'BC', 'C']);
 
   var t1b = Tree.parse('A[B,C]');
   res = t1b.filterRange(true_fn);
@@ -395,11 +364,6 @@ exports['select_all'] = function(test) {
   res = res.map(function (n) { return n.value }).join(' ');
   test.deepEqual(res, 'A A1 A2 B C C1 C11');
 
-  var t1b = Tree.parse('X[A[A1,A2],B,C[C1[C11]]]');
-  res = t1b.getAllNodes();
-  res = res.map(function (n) { return n.value }).join(' ');
-  test.deepEqual(res, 'X A A1 A2 B C C1 C11');
-
   test.done();
 }
 
@@ -409,10 +373,6 @@ exports['select_first'] = function(test) {
   var t0 = Tree.parse('');
   var res = Tree.select(true_fn, t0.children);
   test.equals(res, null);
-
-  var t1 = Tree.parse('A,B');
-  res = Tree.select(true_fn, t1);
-  test.equals(res, t1[0]);
 
   var t1b = Tree.parse('[B,C]');
   res = t1b.select(function (n) { return n.value });
@@ -758,11 +718,12 @@ exports['isRange'] = function(test) {
 }
 
 exports['is_root'] = function(test) {
-  var t1 = Tree.parse('A,B[a]');
+  var t1 = Tree.parse('A');
+  var t2 = Tree.parse("B[a]");
 
-  test.ok(Tree.isRoot(t1[0]));
-  test.ok(Tree.isRoot(t1[1]));
-  test.ok(!Tree.isRoot(t1[1].children[0]));
+  test.ok(Tree.isRoot(t1));
+  test.ok(Tree.isRoot(t2));
+  test.ok(!Tree.isRoot(t2.children[0]));
 
   test.done();
 }

@@ -31,8 +31,20 @@ exports["TreeBuilder: start"] = function(test) {
 
   builder.start();
   test.ok(builder._top instanceof Node);
-  test.ok(builder._current instanceof Node);
-  test.strictEqual(builder._current.value, undefined);
+  test.strictEqual(builder._current, builder._top);
+  test.strictEqual(builder._current.value, "");
+
+  test.done();
+}
+
+exports["TreeBuilder: setValue"] = function(test) {
+  var builder = new TreeBuilder();
+  builder.start();
+
+  builder.setValue("hiii");
+  test.equal(builder.current.value, "hiii");
+  builder.setValue("!!");
+  test.equal(builder.current.value, "hiii!!");
 
   test.done();
 }
@@ -52,60 +64,55 @@ exports["TreeBuilder: createChild"] = function(test) {
  exports["TreeBuilder: siblings"] = function(test) {
    var builder = new TreeBuilder();
    builder.start();
-
-   test.throws(function() { builder.createSibling() });
-
    builder.createChild();
+
    builder.createSibling();
    test.equal(builder._top.children.length, 2);
+   test.strictEqual(builder._top.children[1].ls, builder._top.children[0]);
+
    test.ok(builder.current);
    test.equal(builder.current.value, "");
-
-   builder.createChild();
-   test.equal(builder._top.children.length, 2);
-   test.equal(builder.current.parent.children.length, 1);
-   test.ok(builder.current.parent.ls);
-
-   test.ok(!builder.current.ls);
-   builder.finishSiblings();
-   test.ok(builder.current.ls);
-   test.equal(builder.current.parent, builder._top);
-   test.equal(builder.current.children.length, 1);
-
-   test.throws(function() { builder.finishSiblings() });
 
    test.done();
  }
 
- exports["TreeBuilder: setValue"] = function(test) {
+ exports["TreeBuilder: can't create sibling without first creating a child"] = function(test) {
    var builder = new TreeBuilder();
    builder.start();
+   test.throws(function() { builder.createSibling() });
+   test.done();
+ }
 
-   test.throws(function() { builder.setValue() });
+ exports["TreeBuilder: move to the parent"] = function(test) {
+   var builder = new TreeBuilder();
 
+   builder.start();
+   builder.setValue("A");
    builder.createChild();
-   builder.setValue("hiii");
-   test.equal(builder.current.value, "hiii");
-   builder.setValue("!!");
-   test.equal(builder.current.value, "hiii!!");
+   builder.finishSiblings();
+   builder.setValue("B");
 
+   test.equal(builder._top.value, "AB");
+   test.strictEqual(builder._current, builder._top);
+   test.equal(builder._top.children.length, 1);
+
+   test.done();
+ }
+
+ exports["TreeBuilder: prevent moving higher than the top node"] = function(test) {
+   var builder = new TreeBuilder();
+   builder.start();
+   test.throws(function() { builder.finishSiblings() });
    test.done();
  }
 
  exports["TreeBuilder: getResult"] = function(test) {
    var builder = new TreeBuilder();
-   builder.start();
 
-   test.ok(Array.isArray(builder.getResult()));
-
-   builder.createChild();
-   test.ok(builder.getResult() instanceof Node);
+   test.strictEqual(builder.getResult(), null);
 
    builder.start();
-   builder.createChild();
-   builder.createSibling();
-   test.ok(Array.isArray(builder.getResult()));
-   test.equals(builder.getResult().length, 2);
+   test.strictEqual(builder.getResult(), builder._top);
 
    test.done();
  }

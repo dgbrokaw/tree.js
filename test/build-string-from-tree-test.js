@@ -13,7 +13,7 @@ exports["TreeSerializeDirector: construct"] = function(test) {
 
   test.equals(director.construct(Tree.parse('A')), 'A');
   test.equals(director.construct(Tree.parse('[]')), '[]');
-  test.equals(Tree.stringify(Tree.parse('A,B')), 'A,B');
+  test.equals(Tree.stringify(Tree.parse('[A,B]')), '[A,B]');
   test.equals(director.construct(Tree.parse('[A[A1,A2],B,C[C1[C11]]]')), '[A[A1,A2],B,C[C1[C11]]]');
 
   test.done();

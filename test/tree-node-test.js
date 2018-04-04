@@ -51,11 +51,12 @@ exports["Node: path"] = function(test) {
 }
 
 exports["Node: isRoot"] = function(test) {
-  var t1 = Tree.parse('A,B[a]');
+  var t1 = Tree.parse('A');
+  var t2 = Tree.parse('B[a]');
 
-  test.ok(t1[0].isRoot());
-  test.ok(t1[1].isRoot());
-  test.ok(!t1[1].getChild([0]).isRoot());
+  test.ok(t1.isRoot());
+  test.ok(t2.isRoot());
+  test.ok(!t2.getChild([0]).isRoot());
 
   test.done();
 }
@@ -180,9 +181,6 @@ exports["Node: switchWithSibling"] = function(test) {
 
   var t5 = Tree.parse('[A]');
   t5.getChild([0]).switchWithSibling(t5.getChild([0]));
-
-  var t6 = Tree.parse("A,B");
-  test.throws(function(){t6[0].switchWithSibling(t6[1])});
 
   test.done();
 }

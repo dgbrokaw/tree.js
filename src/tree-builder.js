@@ -21,7 +21,7 @@ export default class TreeBuilder {
 
   start() {
     this._top = this.createNode();
-    this._current = this._top; // no set value in top node
+    this.current = this._top;
   }
 
   createChild() {
@@ -30,36 +30,23 @@ export default class TreeBuilder {
 
   createSibling() {
     if (!this.current.parent) {
-      throw "[TreeBuilder] Error while parsing input: parent not found.";
+      throw "[TreeBuilder] Error: cannot create siblings for the top node.";
     }
     this.current = this.current.parent.append(this.createNode());
   }
 
   finishSiblings() {
-    this._current = this._current.parent;
     if (this._current === this._top) {
-      throw "[TreeBuilder] Error while parsing input: siblings broken.";
+      throw "[TreeBuilder] Error: unexpected input.";
     }
+    this._current = this._current.parent;
   }
 
   setValue(value) {
-    if (this.current === this._top) {
-      throw "[TreeBuilder] Error while parsing input: setting value of top.";
-    }
     this._current.value += value;
   }
 
-  // WARNING: removes the references to the top node. Further construction can
-  // produce unexpected results or exceptions.
   getResult() {
-    for (let i=0; i<this._top.children.length; i++) {
-      this._top.children[i].parent = null;
-    }
-    if (this._top.children.length === 1) {
-      return this._top.children[0];
-    }
-    else {
-      return this._top.children;
-    }
+    return this._top;
   }
 }

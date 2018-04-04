@@ -3,9 +3,8 @@ export default class StringParseDirector {
     this.builder = builder;
   }
 
-  construct(str) {
+  construct(str = "") {
     this.builder.start();
-    this.builder.createChild();
     for (let i=0; i<str.length; i++) {
       var char = str[i];
       if (char == '[') {
