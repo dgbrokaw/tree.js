@@ -32,7 +32,7 @@ export default class Node {
   /// have a parent.
   get position() {
     if (!this.parent) {
-      throw "[Node] Attempted to find position of node which has no parent.";
+      return -1;
     }
     return this.parent.children.indexOf(this);
   }

@@ -140,9 +140,6 @@ export default class Tree {
   /// Returns the index of the passed node in its parent node or -1 if it does not
   /// have a parent.
   static getPosition(node) {
-    if (node.isRoot()) {
-      return -1;
-    }
     return node.position;
   }
 
