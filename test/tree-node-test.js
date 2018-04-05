@@ -236,7 +236,7 @@ exports["Node: insertRange"] = function(test) {
   test.doesNotThrow(function(){Tree.validate(t1)});
 
   var t2 = Tree.parse('[A,B]');
-  test.throws(function(){t1.insertRange(1, [])});
+  t2.insertRange(1, []);
   test.equal(t2.stringify(), '[A,B]');
   test.doesNotThrow(function(){Tree.validate(t2)});
 

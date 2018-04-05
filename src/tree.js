@@ -215,23 +215,23 @@ export default class Tree {
   /// of the node `parent`. The `nodes` array must contain a list of direct
   /// siblings ordered from left to right.
   static insertRange(parent, idx, range) {
-    if (range.length === 0) return;
-    parent.insertRange(idx, range);
+    return parent.insertRange(idx, range);
   }
 
   /// Appends a range of nodes to the end of the children array of the node `parent`.
   /// The `nodes` array must contain a list of direct siblings ordered from left to right.
   /// Returns the inserted node range.
   static appendRange(parent, range) {
-    if (range.length === 0) return;
-    parent.appendRange(range);
+    return parent.appendRange(range);
   }
 
   /// Removes a range of nodes from the tree and returns the index of the first node if
   /// nodes contained more than zero nodes. The `nodes` array must contain a list of direct
   /// siblings ordered from left to right. Sets the removed nodes' parent link to null.
   static removeRange(range) {
-    if (range.length === 0 || !range[0].parent) return;
+    if (range.length === 0 || !range[0].parent) {
+      return -1;
+    }
     return range[0].parent.removeRange(range);
   }
 }

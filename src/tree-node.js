@@ -138,7 +138,7 @@ export default class Node {
 
   insertRange(position, range) {
     if (range.length === 0) {
-      throw "[Node] Attempted to insert empty range into tree.";
+      return range;
     }
     this.insert(position, range);
     return range;
@@ -154,7 +154,7 @@ export default class Node {
 
   removeRange(range) {
     if (range.length === 0) {
-      throw "[Node] Attempted to remove empty range from node's children.";
+      return -1;
     }
     let position = unlinkChild(range);
     removeFromChildren.call(this, position, range);
