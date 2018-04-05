@@ -3,7 +3,7 @@ import pushNew from "./helpers/push-new.js";
 import relationBetweenTrees from "./relate.js";
 
 export default class TreeRelation {
-  constructor(relation) {
+  constructor(relation = {}) {
     this.relation = relation;
   }
 
