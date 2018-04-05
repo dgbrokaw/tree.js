@@ -33,8 +33,8 @@ export default class Tree {
     return serialization.parseString(str);
   }
 
-  static stringify(nodes) {
-    return serialization.stringifyTree(nodes);
+  static stringify(tree) {
+    return serialization.stringifyTree(tree);
   }
 
   static validate(tree) {

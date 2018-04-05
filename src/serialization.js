@@ -9,7 +9,7 @@ export function parseString(str) {
   return director.construct(str);
 }
 
-export function stringifyTree(nodes) {
+export function stringifyTree(tree) {
   let director = new TreeSerializeDirector(new StringBuilder());
-  return asArray(nodes).map(node => director.construct(node)).join(",");
+  return director.construct(tree);
 }
