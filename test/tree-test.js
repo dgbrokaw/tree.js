@@ -435,149 +435,87 @@ exports['clone'] = function(test) {
   test.done();
 }
 
+function set_ids(nodes) {
+  Tree.forEach(function(node) { node.id = node.value }, nodes);
+  return nodes;
+}
+
 exports['getOneToOneRelationBetween'] = function(test) {
-  function set_ids(nodes) {
-    Tree.forEach(function(node) { node.id = node.value }, nodes);
-    return nodes;
-  }
-  var map;
+  var relation;
   var n0 = set_ids(Tree.parse('[A]').children[0]);
   var c0 = Tree.parse('[A]').children[0];
-  map = Tree.getOneToOneRelationBetween(n0, c0);
-  test.strictEqual(map.A[0], c0);
+  relation = Tree.getOneToOneRelationBetween(n0, c0);
+  test.strictEqual(relation.relateOne(n0.selectById("A")), c0);
 
   var n1 = Tree.parse('O[A,B[1,2],C]');
   var c1 = Tree.parse('O[A,B[1,2],C]');
   var mappings = n1.map(function(node) {
     return {id: node.id, target: Tree.getChild(Tree.getPath(node), c1)};
   });
-  map = Tree.getOneToOneRelationBetween(n1, c1);
+  relation = Tree.getOneToOneRelationBetween(n1, c1);
   mappings.forEach(function(mapping) {
-    test.strictEqual(map[mapping.id][0], mapping.target);
+    test.strictEqual(relation.relateOne(n1.selectById(mapping.id)), mapping.target);
   });
 
-  var ns = set_ids(Tree.parse('[A,B[b],C]').children);
-  var cs = Tree.clone(ns);
-  map = Tree.getOneToOneRelationBetween(ns, cs);
-  test.strictEqual(map.A.length, 1);
-  test.strictEqual(map.A[0], cs[0]);
-  test.strictEqual(map.B[0], cs[1]);
-  test.strictEqual(map.B.length, 1);
-  test.strictEqual(map.b[0], cs[1].children[0]);
-  test.strictEqual(map.b.length, 1);
-  test.strictEqual(map.C[0], cs[2]);
-  test.strictEqual(map.C.length, 1);
-
-  var ns2 = Tree.parse('[A]').children;
-  var cs2 = Tree.parse('[A,B]').children;
-  test.throws(function() { Tree.getOneToOneRelationBetween(ns2, cs2) }
+  var n2 = Tree.parse('A');
+  var c2 = Tree.parse('A[B]');
+  test.throws(function() { Tree.getOneToOneRelationBetween(n2, c2) }
              ,"structures don't match");
 
-  var ns3 = Tree.parse('[A]').children;
-  var cs3 = Tree.parse('[A[B]]').children;
-  test.throws(function() { Tree.getOneToOneRelationBetween(ns3, cs3) }
-             ,"structures don't match");
-
-  var ns4 = set_ids(Tree.parse('[A[B],C]').children);
-  var cs4 = Tree.parse('[A,C,D]').children;
-  map = Tree.getOneToOneRelationBetween(ns4, cs4, false);
-  test.strictEqual(map.A.length, 1);
-  test.strictEqual(map.A[0], cs4[0]);
-  test.strictEqual(map.B.length, 0);
-  test.strictEqual(map.C[0], cs4[1]);
-  test.strictEqual(map.C.length, 1);
-
-  var ns5 = set_ids(Tree.parse('[A,A]').children);
-  test.throws(function() { Tree.getOneToOneRelationBetween(ns5, ns5) }
-             ,"duplicate ids");
+  var n3 = set_ids(Tree.parse('O[A[B],C]'));
+  var c3 = Tree.parse('O[A,C,D]');
+  relation = Tree.getOneToOneRelationBetween(n3, c3, false);
+  var source1 = n3.selectById("A");
+  test.strictEqual(relation.relate(source1).length, 1);
+  test.strictEqual(relation.relateOne(source1), c3.getChild([0]));
+  var source2 = n3.selectById("B");
+  test.strictEqual(relation.relate(source2).length, 0);
+  var source3 = n3.selectById("C");
+  test.strictEqual(relation.relateOne(source3), c3.getChild([1]));
+  test.strictEqual(relation.relate(source3).length, 1);
 
   test.done();
 }
 
 exports['getRelationBetween'] = function(test) {
-  function set_ids(nodes) {
-    Tree.forEach(function(node) { node.id = node.value }, nodes);
-    return nodes;
-  }
-  var map;
-  var n0 = set_ids(Tree.parse('[A]').children[0]);
-  var c0 = Tree.parse('[A]').children[0];
-  map = Tree.getRelationBetween(n0, c0);
-  test.strictEqual(map.A[0], c0);
-  test.equals(map.A.length, 1);
+  var relation;
+
+  var n0 = set_ids(Tree.parse('A'));
+  var c0 = Tree.parse('A');
+  relation = Tree.getRelationBetween(n0, c0);
+  test.strictEqual(relation.relateOne(n0), c0);
+  test.equals(relation.relate(n0).length, 1);
 
   var n1 = Tree.parse('O[A,B[1,2],C]');
   var c1 = Tree.parse('O[A,B[1,2],C]');
   var mappings = n1.map(function(node) {
     return {id: node.id, target: Tree.getChild(Tree.getPath(node), c1)};
   });
-  map = Tree.getRelationBetween(n1, c1);
+  relation = Tree.getRelationBetween(n1, c1);
   mappings.forEach(function(mapping) {
-    test.strictEqual(map[mapping.id][0], mapping.target);
-    test.equals(map[mapping.id].length, 1);
+    var source = n1.selectById(mapping.id);
+    test.strictEqual(relation.relateOne(source), mapping.target);
+    test.equals(relation.relate(source).length, 1);
   });
 
-  var ns = set_ids(Tree.parse('[A,B]')).children;
-  var cs = set_ids(Tree.parse('[A[a[b],c],B]')).children;
-  map = Tree.getRelationBetween(ns, cs);
-  test.equals(map.A.length, 4);
-  test.strictEqual(map.A[0], cs[0]);
-  test.strictEqual(map.A[1], cs[0].children[0]);
-  test.strictEqual(map.A[2], cs[0].children[0].children[0]);
-  test.strictEqual(map.A[3], cs[0].children[1]);
-  test.equals(map.B.length, 1);
-  test.strictEqual(map.B[0], cs[1]);
+  var n2 = set_ids(Tree.parse('[A,B]'));
+  var c2 = set_ids(Tree.parse('[A[a[b],c],B]'));
+  relation = Tree.getRelationBetween(n2.children, c2.children);
+  var targets = relation.relate(n2.selectById("A"));
+  test.equals(targets.length, 4);
+  test.strictEqual(targets[0], c2.getChild([0]));
+  test.strictEqual(targets[1], c2.getChild([0,0]));
+  test.strictEqual(targets[2], c2.getChild([0,0,0]));
+  test.strictEqual(targets[3], c2.getChild([0,1]));
+  targets = relation.relate(n2.selectById("B"));
+  test.equals(targets.length, 1);
+  test.strictEqual(targets[0], c2.getChild([1]));
 
-  map = Tree.getRelationBetween(cs, ns);
-  test.equals(map.A.length, 1);
-  test.strictEqual(map.A[0], ns[0]);
-  test.equals(map.a.length, 1);
-  test.strictEqual(map.a[0], ns[0]);
-  test.equals(map.b.length, 1);
-  test.strictEqual(map.b[0], ns[0]);
-  test.equals(map.c.length, 1);
-  test.strictEqual(map.c[0], ns[0]);
-  test.equals(map.B.length, 1);
-  test.strictEqual(map.B[0], ns[1]);
-
-  var ns2 = Tree.parse('[A]').children;
-  var cs2 = Tree.parse('[A,B]').children;
-  test.throws(function() { Tree.getRelationBetween(ns2, cs2) }
-             ,"structures don't match");
-
-  var ns3 = set_ids(Tree.parse('[A,A]').children);
-  test.throws(function() { Tree.getRelationBetween(ns3, ns3) }
-             ,"duplicate ids");
+  test.throws(function() {
+    Tree.getRelationBetween(Tree.parse("[A,B]").children, Tree.parse("[A,B,C]").children)
+  });
 
   test.done();
-}
-
-exports['get_by_value'] = function(test) {
-  var t1 = Tree.parse('[A,B[B,b],B,C[C[x,y,z[1,2]]]]')
-
-  var r0 = Tree.filterByValue('A', t1.children);
-  test.equals(r0.length, 1);
-  test.equals(r0[0], t1.children[0]);
-
-  var r1 = Tree.filterByValue('B', t1.children);
-  test.equals(r1.length, 3);
-  test.equals(r1[0], t1.children[1]);
-  test.equals(r1[1], t1.children[1].children[0]);
-  test.equals(r1[2], t1.children[2]);
-
-  var r1b = t1.filterByValue('B');
-  test.equals(r1b.length, 3);
-  test.equals(r1b[0], t1.children[1]);
-  test.equals(r1b[1], t1.children[1].children[0]);
-  test.equals(r1b[2], t1.children[2]);
-
-  var r2 = Tree.filterByValue('ab', t1.children);
-  test.equals(r2.length, 0);
-
-  var r3 = Tree.filterByValue('', t1.children);
-  test.equals(r3.length, 0);
-
-  test.done()
 }
 
 exports['get_by_id'] = function(test){

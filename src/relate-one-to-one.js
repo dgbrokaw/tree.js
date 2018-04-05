@@ -8,28 +8,21 @@
  * mapping is returned.
  */
 export default function oneToOneRelationBetweenTrees(sourceTree, targetTree, strict=true) {
-  var relation = {};
+  let relation = {};
 
   function relationfn(source, target) {
-    if (strict && source.id in relation) throw "duplicate id in source tree";
     relation[source.id] = [target];
-    if (strict && source.children.length !== target.children.length)
+    if (strict && source.children.length !== target.children.length) {
       throw "tree structures don't match"
-    var slen = source.children.length, tlen = target.children.length;
+    }
+    let slen = source.children.length, tlen = target.children.length;
     for (var i=0; i<slen; i++) {
       if (i<tlen) relationfn(source.children[i], target.children[i]);
       else source.children[i].forEach(function(s) { relation[s.id] = []});
     }
   }
 
-  if (Array.isArray(sourceTree)) {
-    if (strict && sourceTree.length !== targetTree.length) throw "tree structures don't match";
-    var slen = sourceTree.length, tlen = targetTree.length;
-    for (var i=0; i<slen; i++) {
-      if (i<tlen) relationfn(sourceTree[i], targetTree[i]);
-      else sourceTree[i].forEach(function(s) { relation[s.id] = []});
-    }
-  } else relationfn(sourceTree, targetTree);
+  relationfn(sourceTree, targetTree);
 
   return relation;
 }

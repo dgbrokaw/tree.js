@@ -11,12 +11,14 @@ Most of the methods can accept both a single node or an array of nodes to work o
 import Node from "./tree-node.js";
 import * as serialization from "./serialization.js";
 import validateTree from "./validate.js";
+import asArray from "./helpers/as-array.js";
 import id from "./helpers/id.js";
 import cloneTree from "./clone.js";
 import * as iteration from "./iteration.js";
 import relationBetweenTrees from "./relate.js";
 import oneToOneRelationBetweenTrees from "./relate-one-to-one.js";
 import NodeSelection from "./node-selection.js";
+import TreeRelation from "./tree-relation.js";
 
 export default class Tree {
   static version() {
@@ -106,11 +108,11 @@ export default class Tree {
   }
 
   static getRelationBetween(sourceTree, targetTree) {
-    return relationBetweenTrees(sourceTree, targetTree);
+    return relateTrees(sourceTree, targetTree, relationBetweenTrees);
   }
 
   static getOneToOneRelationBetween(sourceTree, targetTree, strict) {
-    return oneToOneRelationBetweenTrees(sourceTree, targetTree, strict);
+    return relateTrees(sourceTree, targetTree, oneToOneRelationBetweenTrees, strict);
   }
 
   /// Returns the closest common ancestor of the passed nodes.
@@ -235,4 +237,29 @@ export default class Tree {
     if (range.length === 0 || !range[0].parent) return;
     return range[0].parent.removeRange(range);
   }
+}
+
+function relateTrees(source, target, strategy, strict) {
+  let relation = new TreeRelation();
+  let sources = asArray(source);
+  let targets = asArray(target);
+  if (sources.length === targets.length) {
+    sources.forEach((source, idx) => {
+      relation.updateWithRelation(strategy(source, targets[idx], strict));
+    });
+  }
+  else if (sources.length > 1 && targets.length === 1) {
+    sources.forEach(tree => {
+      relation.updateWithRelation(strategy(tree, targets[0], strict));
+    });
+  }
+  else if (sources.length === 1 && targets.length > 1) {
+    targets.forEach(tree => {
+      relation.updateWithRelation(strategy(sources[0], tree, strict));
+    });
+  }
+  else {
+    throw "[Tree] Unaccepted input to relation constructor."
+  }
+  return relation;
 }
