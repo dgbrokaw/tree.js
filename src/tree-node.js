@@ -80,9 +80,9 @@ export default class Node {
   // The returned siblings *includes* this node.
   get siblings() {
     if (!this.parent) {
-      throw "[Node] Attempted to get siblings of node which has no parent.";
+      return [this];
     }
-    return this.parent.children;
+    return this.parent.children.slice();
   }
 
   insert(position, child) {

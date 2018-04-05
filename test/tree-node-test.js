@@ -214,6 +214,17 @@ exports["Node: getAncestor"] = function(test) {
   test.done();
 }
 
+exports["Node: siblings"] = function(test) {
+  var t1 = Tree.parse('O[a,b,c[d,e]]');
+
+  test.equal(t1.siblings.length, 1);
+  test.equal(t1.getChild([0]).siblings.length, 3);
+  test.equal(t1.getChild([0]).siblings[0].value, "a");
+  test.equal(t1.getChild([2,0]).siblings.length, 2);
+
+  test.done();
+}
+
 exports["Node: insertRange"] = function(test) {
   var t0 = Tree.parse('');
   t0.insertRange(0, Tree.parse('[a,b]').children);
