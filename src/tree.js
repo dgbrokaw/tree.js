@@ -14,6 +14,7 @@ import validateTree from "./validate.js";
 import asArray from "./helpers/as-array.js";
 import id from "./helpers/id.js";
 import cloneTree from "./clone.js";
+import * as iteration from "./iteration.js";
 import relationBetweenTrees from "./relate.js";
 import oneToOneRelationBetweenTrees from "./relate-one-to-one.js";
 import NodeSelection from "./node-selection.js";
@@ -51,27 +52,27 @@ export default class Tree {
   /// Calls the passed function for the passed node and all its descandents in depth-first order.
   /// Node can either be a single node or an array of nodes.
   static forEach(fn, node) {
-    node.forEach(fn);
+    iteration.forEach(fn, node);
   }
 
   /// Calls the passed function for each of the passed nodes and their children, depth-first.
   /// The results are stored in an array that is returned. Node can either be a single node or
   /// an array of nodes.
   static map(fn, node) {
-    return node.map(fn);
+    return iteration.map(fn, node);
   }
 
   /// Returns an array of all nodes for which the passed selector function returned true. Traverses
   /// the nodes depth-first. The passed node can either be a single node or an array of nodes.
   static filter(selector, node) {
-    return node.filter(selector);
+    return iteration.filter(selector, node);
   }
 
   /// Returns the first node in the passed node or its decandents for that the selector function
   /// returns true. Traverses depth-first. Node can either be a single node or an array of nodes.
   /// If no nodes matches, returns null.
   static select(selector, node) {
-    return node.select(selector);
+    return iteration.select(selector, node);
   }
 
   /// Returns an array of all node ranges for which the passed selector function
@@ -79,31 +80,31 @@ export default class Tree {
   /// If no_overlap is set to true, the function will not search children of a
   /// successful match and will not include any nodes used in a successful match again.
   static filterRange(selector, node, noOverlap) {
-    return node.filterRange(selector, noOverlap);
+    return iteration.filterRange(selector, node, noOverlap);
   }
 
   /// Returns an array of all nodes in the tree of the passed root node. The root node is included.
   /// Traverses the nodes depth-first. The passed node can either be a single node or an array of
   /// nodes.
   static getAllNodes(node) {
-    return node.getAllNodes();
+    return iteration.getAllNodes(node);
   }
 
   /// Returns an array of all leaf nodes of the node array or single node passed.
   static getLeafNodes(node) {
-    return node.getLeafNodes();
+    return iteration.getLeafNodes(node);
   }
 
   /// Returns an array of all nodes that have the passed value in their .value field. Seaches on
   /// the passed array of nodes or single node depth-first.
   static filterByValue(value, node) {
-    return node.filterByValue(value);
+    return iteration.filterByValue(value, node);
   }
 
   /// Returns the first node with the passed id or null if no node has the id. Seaches on
   /// the passed array of nodes or single node depth-first.
   static selectById(id, node) {
-    return node.selectById(id);
+    return iteration.selectById(id, node);
   }
 
   static getRelationBetween(sourceTree, targetTree) {
