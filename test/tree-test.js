@@ -435,6 +435,18 @@ exports['clone'] = function(test) {
   test.done();
 }
 
+exports["Tree: sort nodes"] = function(test) {
+  var t1 = Tree.parse("A[B,C]");
+  var nodes = [t1.getChild([1]), t1.getChild([0]), t1];
+
+  var sorted = Tree.sortDepthFirst(nodes);
+  test.strictEqual(sorted[0], t1);
+  test.strictEqual(sorted[1], t1.getChild([0]));
+  test.strictEqual(sorted[2], t1.getChild([1]));
+
+  test.done();
+}
+
 function set_ids(nodes) {
   Tree.forEach(function(node) { node.id = node.value }, nodes);
   return nodes;

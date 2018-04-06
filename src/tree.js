@@ -133,6 +133,12 @@ export default class Tree {
     return (new NodeSelection(nodes)).range;
   }
 
+  static sortDepthFirst(nodes) {
+    let sel = new NodeSelection(nodes);
+    sel.sort();
+    return sel.selection;
+  }
+
   static hasChildren(node) {
     return node.hasChildren();
   }
