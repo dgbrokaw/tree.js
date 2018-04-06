@@ -1,5 +1,8 @@
 import Node from "./tree-node.js";
 
+// Use for creating trees. Start the construction, then add nodes.
+// Stores the result until start is called again. Use with a build
+// director (StringParseDirector).
 export default class TreeBuilder {
   constructor() {
     this._top = null;

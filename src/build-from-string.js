@@ -1,3 +1,5 @@
+// Use to create trees from simple string representations.
+// Takes a builder (probably TreeBuilder).
 export default class StringParseDirector {
   constructor(builder) {
     this.builder = builder;

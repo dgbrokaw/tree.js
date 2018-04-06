@@ -1,4 +1,6 @@
 // Inverse of the StringParseDirector class.
+// Used to create simple string representations of a tree.
+// Takes a builder (probably StringBuilder).
 export default class TreeSerializeDirector {
   constructor(builder) {
     this.builder = builder;

@@ -1,6 +1,8 @@
 import asArray from "./helpers/as-array.js";
 import { stringifyTree } from "./serialization.js";
 
+// NodeSelection provides an interface for storing and interacting with groups/
+// ranges of nodes within a single tree.
 export default class NodeSelection {
   constructor(nodes) {
     this._selection = [];
@@ -27,10 +29,12 @@ export default class NodeSelection {
     this.selection = nodes;
   }
 
+  // Add one or more nodes to the selection.
   add(node) {
     this.selection = this._selection.concat(asArray(node));
   }
 
+  // Remove one or more nodes from the selection.
   remove(node) {
     asArray(node).forEach(n => {
       if (this._selection.includes(n)) {
@@ -136,6 +140,8 @@ function allSameRoot(nodes) {
   return true;
 }
 
+// Takes an array of nodes that all come from the same tree.
+// Compares their paths to sort them in depth-first order.
 function sortDepthFirst(nodes) {
   return nodes.sort(function compare(n1, n2) {
     let p1 = n1.path;

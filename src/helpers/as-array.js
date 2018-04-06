@@ -1,3 +1,4 @@
+// Warning: does not copy the input if it is already an array.
 export default function asArray(obj) {
   if (!obj) {
     return [];

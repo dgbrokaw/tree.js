@@ -1,6 +1,6 @@
-/// Will throw an expecption if any node in the tree has invalid value for parent, ls or rs.
-/// `nodes` can either be a single node or an array of nodes. Accordingly, a single node or an array
-/// of nodes is returned.
+// Will throw an exception if any node in the tree has invalid value for parent, ls or rs.
+// `nodes` can either be a single node or an array of nodes. Accordingly, a single node or an array
+// of nodes is returned.
 export default function validateTree(nodes) {
   var check = function(node, parent) {
     if (node.parent != parent) throw "wrong parent information";

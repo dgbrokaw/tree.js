@@ -1,5 +1,8 @@
 import DepthFirstTreeIterator from "./iterator-depth-first.js";
 
+// Defines some iteration methods. Uses depth-first traversal by default.
+// If the Node passed into the method provides its own iterator, that one is
+// used instead.
 export function createIterator(tree) {
   let tr = tree;
   let it = null;

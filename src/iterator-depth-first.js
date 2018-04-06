@@ -1,5 +1,8 @@
 import asArray from "./helpers/as-array.js";
 
+// An internal iterator for traversing trees. Traverses the tree depth-first.
+// Takes any number of trees; the results for each will be lumped together in
+// the return value.
 export default class DepthFirstTreeIterator {
   constructor(trees) {
     this.trees = asArray(trees);
@@ -69,6 +72,12 @@ export default class DepthFirstTreeIterator {
     return null;
   }
 
+  // All arguments are optional.
+  // "Process" takes a range of tree nodes and returns a value. If not given, 
+  // the traversed node range itself will be the result.
+  // "Test" takes a node range and returns a boolean. If not given, all nodes
+  // pass and are used/processed for the result.
+  // Processed node ranges that result in "undefined" are excluded from the result.
   traverseRange(process, test, noOverlap) {
     let result = [];
 
