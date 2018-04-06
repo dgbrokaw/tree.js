@@ -48,8 +48,9 @@ exports["Node: position"] = function(test) {
 }
 
 exports["Node: path"] = function(test) {
-  var tree = Tree.parse('[A,B[a,b],C,D[j[x,y,z[1,2]]]]');
+  var tree = Tree.parse('O[A,B[a,b],C,D[j[x,y,z[1,2]]]]');
 
+  test.deepEqual(tree.path, []);
   test.deepEqual(tree.getChild([0]).path, [0]);
   test.deepEqual(tree.getChild([1]).path, [1]);
   test.deepEqual(tree.getChild([1,1]).path, [1,1]);
