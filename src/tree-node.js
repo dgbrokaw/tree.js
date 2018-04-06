@@ -153,7 +153,7 @@ export default class Node {
   }
 
   removeRange(range) {
-    if (range.length === 0) {
+    if (range.length === 0 || range[0].parent !== this) {
       return -1;
     }
     let position = unlinkChild(range);
