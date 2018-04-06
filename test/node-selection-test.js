@@ -1,5 +1,6 @@
 var NodeSelection = require("../dist/index.js").NodeSelection;
 var Tree = require("../dist/index.js").Tree;
+var Node = require("../dist/index.js").Node;
 
 exports["NodeSelection: constructor"] = function(test) {
   var sel = new NodeSelection();
@@ -21,10 +22,21 @@ exports["NodeSelection: selection setter"] = function(test) {
 }
 
 exports["NodeSelection: selection get/set shorthands"] = function(test) {
-    var sel = new NodeSelection();
-    sel.sel = ["x", "y"];
-    test.ok(Array.isArray(sel.sel) && sel.sel.length === 2);
-    test.done();
+  var sel = new NodeSelection();
+  sel.sel = ["x", "y"];
+  test.ok(Array.isArray(sel.sel) && sel.sel.length === 2);
+  test.done();
+}
+
+exports["NodeSelection: add to selection"] = function(test) {
+  var sel = new NodeSelection();
+  var t1 = Tree.parse("A[B,C]");
+  sel.sel = t1.getChild([0]);
+  sel.add(t1.getChild([1]));
+  test.ok(sel.sel.length === 2);
+  test.strictEqual(sel.sel[0], t1.getChild([0]));
+  test.strictEqual(sel.sel[1], t1.getChild([1]));
+  test.done();
 }
 
 exports["NodeSelection: closest common ancestor"] = function(test) {
