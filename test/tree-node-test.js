@@ -145,6 +145,8 @@ exports["Node: append child"] = function(test) {
   t3.getChild([0]).append(new Node("c"));
   test.equal(t3.stringify(), '[A[a,b,c],B]');
   test.doesNotThrow(function(){Tree.validate(t3)});
+
+  test.done();
 }
 
 exports["Node: prepend child"] = function(test) {
@@ -152,6 +154,7 @@ exports["Node: prepend child"] = function(test) {
   t4.getChild([0]).prepend(new Node("c"));
   test.equal(t4.stringify(), '[A[c,a,b],B]');
   test.doesNotThrow(function(){Tree.validate(t4)});
+  test.done();
 }
 
 exports['Node: nodes remove themselves'] = function(test) {
@@ -267,6 +270,7 @@ exports["Node: append a range of children"] = function(test) {
   t0c.appendRange(Tree.parse('[a,b]').children);
   test.equal(t0c.stringify(), '[a,b]');
   test.doesNotThrow(function(){Tree.validate(t0c)});
+  test.done();
 }
 
 exports["Node: prepend a range of children"] = function(test) {
@@ -274,6 +278,7 @@ exports["Node: prepend a range of children"] = function(test) {
   t0b.prependRange(Tree.parse('[a,b]').children);
   test.equal(t0b.stringify(), '[a,b]');
   test.doesNotThrow(function(){Tree.validate(t0b)});
+  test.done();
 }
 
 exports["Node: remove a range of children"] = function(test) {
