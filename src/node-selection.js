@@ -31,6 +31,18 @@ export default class NodeSelection {
     this.selection = this._selection.concat(asArray(node));
   }
 
+  remove(node) {
+    asArray(node).forEach(n => {
+      if (this._selection.includes(n)) {
+        this._selection.splice(this._selection.indexOf(n), 1);
+      }
+    });
+  }
+
+  sort() {
+    this._selection = sortDepthFirst(this._selection);
+  }
+
   // Returns the closest common ancestor of the selected nodes.
   get closestCommonAncestor() {
     return ccaHelper(this._selection).closestCommonAncestor;
@@ -122,6 +134,37 @@ function allSameRoot(nodes) {
     }
   }
   return true;
+}
+
+function sortDepthFirst(nodes) {
+  return nodes.sort(function compare(n1, n2) {
+    let p1 = n1.path;
+    let p2 = n2.path;
+
+    // heck for an earlier position at each level of depth
+    for (let depth=0; depth < Math.min(p1.length, p2.length); depth++) {
+      let pos1 = p1[depth];
+      let pos2 = p2[depth];
+      if (pos1 < pos2) {
+        return -1;
+      }
+      else if (pos1 > pos2) {
+        return 1;
+      }
+    }
+
+    // nodes have the same path for their corresponding depths, the node with
+    // the shorter path goes first
+    if (p1.length === p2.length) {
+      return 0;
+    }
+    else if (p1.length < p2.length) {
+      return -1;
+    }
+    else {
+      return 1;
+    }
+  });
 }
 
 // Returns an object containing the paths, common path length, and closest

@@ -57,6 +57,38 @@ exports["NodeSelection: add to selection"] = function(test) {
   test.done();
 }
 
+exports["NodeSelection: remove from selection"] = function(test) {
+  var sel = new NodeSelection();
+  var t1 = Tree.parse("A[B,C]");
+
+  sel.sel = t1.getAllNodes();
+  test.equal(sel.sel.length, 3);
+  sel.remove(t1);
+  test.equal(sel.sel.length, 2);
+  sel.remove(t1.children);
+  test.equal(sel.sel.length, 0);
+
+  test.done();
+}
+
+exports["NodeSelection: sorting the selection"] = function(test) {
+  var sel = new NodeSelection();
+  var t1 = Tree.parse("A[B,C]");
+
+  sel.add(t1.getChild([1]));
+  sel.add(t1.getChild([0]));
+  sel.add(t1);
+  test.equal(sel.sel.length, 3);
+  test.strictEqual(sel.sel[2], t1);
+
+  sel.sort();
+  test.strictEqual(sel.sel[0], t1);
+  test.strictEqual(sel.sel[1], t1.getChild([0]));
+  test.strictEqual(sel.sel[2], t1.getChild([1]));
+
+  test.done();
+}
+
 exports["NodeSelection: closest common ancestor"] = function(test) {
   var t1 = Tree.parse('[A,B[a,b],C,D[j[x,y,z[1,2]]]]');
   var a = Tree.getChild([1,0], t1);
