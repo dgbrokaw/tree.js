@@ -22,14 +22,12 @@ export function forEach(fn, tree) {
 
 export function map(fn, tree) {
   let it = createIterator(tree);
-  it.traverse(fn);
-  return it.result;
+  return it.traverse(fn);
 }
 
 export function filter(selector, tree) {
   let it = createIterator(tree);
-  it.traverse(null, selector);
-  return it.result;
+  return it.traverse(null, selector);
 }
 
 export function select(selector, tree) {
@@ -39,8 +37,7 @@ export function select(selector, tree) {
 
 export function filterRange(selector, tree, noOverlap) {
   let it = createIterator(tree);
-  it.traverseRange(null, selector, noOverlap);
-  return it.result;
+  return it.traverseRange(null, selector, noOverlap);
 }
 
 export function getAllNodes(tree) {

@@ -10,47 +10,47 @@ exports["DepthFirstTreeIterator: constructor"] = function(test) {
   test.done();
 }
 
-exports["DepthFirstTreeIterator: isDone & start"] = function(test) {
-  var iterator = new DepthFirstTreeIterator();
-  test.ok(!iterator.isDone());
-  iterator.start();
-  test.ok(iterator.isDone());
-  test.done();
-}
-
 exports["DepthFirstTreeIterator: traverse"] = function(test) {
   var iterator = new DepthFirstTreeIterator(Tree.parse('O[A[A1,A2],B,C[C1[C11]]]'));
-  iterator.traverse(n => n.value);
-  test.deepEqual(iterator.result, ['O','A','A1','A2','B','C','C1','C11']);
-  iterator.traverse(function(n) {  });
-  test.ok(Array.isArray(iterator.result) && iterator.result.length === 0);
+
+  var result = iterator.traverse(n => n.value);
+  test.deepEqual(result, ['O','A','A1','A2','B','C','C1','C11']);
+
+  result = iterator.traverse(function(n) {  });
+  test.ok(Array.isArray(result) && result.length === 0);
+
   test.done();
 }
 
 exports["DepthFirstTreeIterator: traverse + test"] = function(test) {
   var iterator = new DepthFirstTreeIterator(Tree.parse('O[A[A1,A2],B,C[C1[C11]]]'));
-  iterator.traverse(n => n.value, n => n.value[0] === "A");
-  test.deepEqual(iterator.result, ["A", "A1", "A2"]);
+
+  var result = iterator.traverse(n => n.value, n => n.value[0] === "A");
+  test.deepEqual(result, ["A", "A1", "A2"]);
+
   test.done();
 }
 
 exports["DepthFirstTreeIterator: select"] = function(test) {
   var iterator = new DepthFirstTreeIterator(Tree.parse('O[A[A1,A2],B,C[C1[C11]]]'));
-  iterator.select(function(n) { return true });
-  test.equal(iterator.result[0].value, "O");
-  iterator.select(function(n) { return n.value === "B" });
-  test.equal(iterator.result[0].value, "B");
+
+  var result = iterator.select(function(n) { return true });
+  test.equal(result.value, "O");
+
+  result = iterator.select(function(n) { return n.value === "B" });
+  test.equal(result.value, "B");
+
   test.done();
 }
 
 exports["DepthFirstTreeIterator: traverseRange"] = function(test) {
   var iterator = new DepthFirstTreeIterator(Tree.parse('O[A[A1,A2],B,C[C1[C11]]]'));
 
-  iterator.traverseRange(r => r.map(n => n.value), null, true);
-  test.deepEqual(iterator.result, [['O']]);
+  var result = iterator.traverseRange(r => r.map(n => n.value), null, true);
+  test.deepEqual(result, [['O']]);
 
-  iterator.traverseRange(r => r.map(n => n.value), null);
-  test.deepEqual(iterator.result, [ [ 'O' ],
+  result = iterator.traverseRange(r => r.map(n => n.value), null);
+  test.deepEqual(result, [ [ 'O' ],
     [ 'A' ],
     [ 'A', 'B' ],
     [ 'A', 'B', 'C' ],
@@ -64,8 +64,8 @@ exports["DepthFirstTreeIterator: traverseRange"] = function(test) {
     [ 'C11' ] ]
   );
 
-  iterator.traverse(function(n) {  });
-  test.ok(Array.isArray(iterator.result) && iterator.result.length === 0);
+  result = iterator.traverse(function(n) {  });
+  test.ok(Array.isArray(result) && result.length === 0);
 
   test.done();
 }

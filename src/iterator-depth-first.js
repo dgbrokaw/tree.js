@@ -3,16 +3,6 @@ import asArray from "./helpers/as-array.js";
 export default class DepthFirstTreeIterator {
   constructor(trees) {
     this.trees = asArray(trees);
-    this.result = null;
-  }
-
-  isDone() {
-    return Array.isArray(this.result);
-  }
-
-  start() {
-    this.result = [];
-    return this;
   }
 
   // Both arguments are optional.
@@ -22,8 +12,7 @@ export default class DepthFirstTreeIterator {
   // pass and are used/processed for the result.
   // Processed nodes that result in "undefined" are excluded from the result.
   traverse(process, test) {
-    this.start();
-    let result = this.result;
+    let result = [];
 
     let f = function(node) {
       if (!test || test(node)) {
@@ -46,15 +35,13 @@ export default class DepthFirstTreeIterator {
       f(this.trees[i]);
     }
 
-    return this.result;
+    return result;
   }
 
   // Traverses the tree until it finds a node that passes the selector and then
   // returns that node. The result member of the iterator will be empty or
   // contain only one item after running this.
   select(selector) {
-    this.start();
-
     let f = function(node) {
       let curr = node;
       for (;;) {
@@ -75,7 +62,6 @@ export default class DepthFirstTreeIterator {
     for (let i=0; i<this.trees.length; i++) {
       let node = f(this.trees[i]);
       if (node) {
-        this.result = [node];
         return node;
       }
     }
@@ -84,8 +70,7 @@ export default class DepthFirstTreeIterator {
   }
 
   traverseRange(process, test, noOverlap) {
-    this.start();
-    let result = this.result;
+    let result = [];
 
     let f = function(nodes, idx) {
       let range = [], n = nodes[idx];
@@ -114,6 +99,6 @@ export default class DepthFirstTreeIterator {
       i += f(this.trees, i);
     }
 
-    return this.result;
+    return result;
   }
 }
