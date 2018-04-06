@@ -16,15 +16,31 @@ exports["NodeSelection: selection getter"] = function(test) {
 
 exports["NodeSelection: selection setter"] = function(test) {
   var sel = new NodeSelection();
-  sel.selection = "x";
-  test.ok(Array.isArray(sel.selection) && sel.selection[0] == "x");
+
+  sel.selection = new Node("x");
+  test.ok(Array.isArray(sel.selection))
+  test.equal(sel.selection.length, 1);
+  test.equal(sel.selection[0].value, "x");
+
+  test.done();
+}
+
+exports["NodeSelection: all nodes must belong to the same tree"] = function(test) {
+  var sel = new NodeSelection();
+
+  var t1 = new Node("x");
+  var t2 = new Node("y");
+  test.throws(function() { sel.selection = [t1, t2] });
+
   test.done();
 }
 
 exports["NodeSelection: selection get/set shorthands"] = function(test) {
   var sel = new NodeSelection();
-  sel.sel = ["x", "y"];
-  test.ok(Array.isArray(sel.sel) && sel.sel.length === 2);
+
+  sel.sel = new Node("x");
+  test.ok(Array.isArray(sel.sel) && sel.sel.length === 1);
+
   test.done();
 }
 
@@ -32,10 +48,12 @@ exports["NodeSelection: add to selection"] = function(test) {
   var sel = new NodeSelection();
   var t1 = Tree.parse("A[B,C]");
   sel.sel = t1.getChild([0]);
+
   sel.add(t1.getChild([1]));
   test.ok(sel.sel.length === 2);
   test.strictEqual(sel.sel[0], t1.getChild([0]));
   test.strictEqual(sel.sel[1], t1.getChild([1]));
+
   test.done();
 }
 

@@ -3,14 +3,21 @@ import { stringifyTree } from "./serialization.js";
 
 export default class NodeSelection {
   constructor(nodes) {
-    this._selection = asArray(nodes);
+    this._selection = [];
+    this.add(nodes);
   }
 
   get selection() {
     return this._selection;
   }
   set selection(nodes) {
-    this._selection = asArray(nodes);
+    let ns = asArray(nodes);
+    if (allSameRoot(ns)) {
+      this._selection = ns;
+    }
+    else {
+      throw "[NodeSelection] All nodes in a selection must belong to the same tree.";
+    }
   }
   // Shorthands for the previous two.
   get sel() {
@@ -18,6 +25,10 @@ export default class NodeSelection {
   }
   set sel(nodes) {
     this.selection = nodes;
+  }
+
+  add(node) {
+    this.selection = this._selection.concat(asArray(node));
   }
 
   // Returns the closest common ancestor of the selected nodes.
@@ -94,6 +105,23 @@ export default class NodeSelection {
   toString() {
     return "[" + this._selection.map(n => stringifyTree(n)) + "]";
   }
+}
+
+function sameRoot(node1, node2) {
+  return node1.root === node2.root;
+}
+
+function allSameRoot(nodes) {
+  if (nodes.length < 1) {
+    return true;
+  }
+  let root = nodes[0].root;
+  for (let i=1; i<nodes.length; i++) {
+    if (!sameRoot(root, nodes[i])) {
+      return false;
+    }
+  }
+  return true;
 }
 
 // Returns an object containing the paths, common path length, and closest
