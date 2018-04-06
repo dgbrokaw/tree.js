@@ -3,12 +3,20 @@ var Tree = require("../dist/index.js").Tree;
 
 exports["Node: constructor"] = function(test) {
   var node = new Node();
-  test.ok(Array.isArray(node.children) && node.children.length === 0);
-  test.equal(node.parent, null);
-  test.equal(node.ls, null);
-  test.equal(node.rs, null);
-  test.ok(typeof(node.id) === "string");
 
+  test.ok(Array.isArray(node.children) && node.children.length === 0);
+  test.strictEqual(node.parent, null);
+  test.strictEqual(node.ls, null);
+  test.strictEqual(node.rs, null);
+  test.ok(typeof(node.id) === "string");
+  test.strictEqual(node.value, null);
+
+  test.done();
+}
+
+exports["Node: setting the value on construction"] = function(test) {
+  var node = new Node("x");
+  test.equal(node.value, "x");
   test.done();
 }
 

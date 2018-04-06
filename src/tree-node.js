@@ -9,12 +9,13 @@ import * as iteration from "./iteration.js";
 import { stringifyTree } from "./serialization.js";
 
 export default class Node {
-  constructor() {
+  constructor(value = null) {
     this._children = [];
     this.parent = null;
     this.ls = null;
     this.rs = null;
     this.id = id();
+    this.value = value;
   }
 
   hasChildren() {
