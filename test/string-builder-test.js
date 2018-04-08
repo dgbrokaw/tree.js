@@ -1,4 +1,4 @@
-var StringBuilder = require("../dist/index.js").StringBuilder;
+var StringBuilder = require("../dist/tree.cjs.js").StringBuilder;
 
 exports["StringBuilder: constructor"] = function(test) {
   var builder = new StringBuilder();

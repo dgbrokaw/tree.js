@@ -1,6 +1,6 @@
-var relationBetweenTrees = require("../dist/index.js").relationBetweenTrees;
-var oneToOneRelationBetweenTrees = require("../dist/index.js").oneToOneRelationBetweenTrees;
-var Tree = require("../dist/index.js").Tree;
+var relationBetweenTrees = require("../dist/tree.cjs.js").relationBetweenTrees;
+var oneToOneRelationBetweenTrees = require("../dist/tree.cjs.js").oneToOneRelationBetweenTrees;
+var Tree = require("../dist/tree.cjs.js").Tree;
 
 function set_ids(nodes) {
   Tree.forEach(function(node) { node.id = node.value }, nodes);

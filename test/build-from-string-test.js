@@ -1,6 +1,6 @@
-var StringParseDirector = require("../dist/index.js").StringParseDirector;
-var TreeBuilder = require("../dist/index.js").TreeBuilder;
-var Node = require("../dist/index.js").Node;
+var StringParseDirector = require("../dist/tree.cjs.js").StringParseDirector;
+var TreeBuilder = require("../dist/tree.cjs.js").TreeBuilder;
+var Node = require("../dist/tree.cjs.js").Node;
 
 exports["StringParseDirector: constructor"] = function(test) {
   var builder = new TreeBuilder();

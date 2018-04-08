@@ -1,4 +1,4 @@
-var Tree = require("../dist/index.js").Tree;
+var Tree = require("../dist/tree.cjs.js").Tree;
 
 exports["Iteration: forEach"] = function(test) {
   var t0 = Tree.parse('');

@@ -2,6 +2,9 @@
   "name": "tree.js",
   "description": "A javascript library for creating and manipulating fully linked tree structures.",
   "version": "2.0.0",
+  "main": "dist/tree.cjs.js",
+  "module": "dist/tree.esm.js",
+  "browser": "dist/tree.umd.js",
   "keywords": [
     "tree"
   ],
@@ -16,14 +19,13 @@
     "url": "https://github.com/dgbrokaw/tree.js"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
     "istanbul": "0.2.x",
     "nodeunit": "0.8.x",
-    "uglify-js": "2.x.x"
+    "rollup": "^0.57.0"
   },
   "scripts": {
-    "build": "babel src -d dist",
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
     "pretest": "npm run build",
     "test": "./node_modules/.bin/nodeunit test",
     "test-cov": "./node_modules/.bin/istanbul cover ./node_modules/.bin/nodeunit -- test"

@@ -1,5 +1,5 @@
-var TreeRelation = require("../dist/index.js").TreeRelation;
-var Tree = require("../dist/index.js").Tree;
+var TreeRelation = require("../dist/tree.cjs.js").TreeRelation;
+var Tree = require("../dist/tree.cjs.js").Tree;
 
 exports["TreeRelation: constructor"] = function(test) {
   var rel = new TreeRelation();

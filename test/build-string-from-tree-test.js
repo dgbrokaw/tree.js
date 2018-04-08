@@ -1,6 +1,6 @@
-var TreeSerializeDirector = require("../dist/index.js").TreeSerializeDirector;
-var StringBuilder = require("../dist/index.js").StringBuilder;
-var Tree = require("../dist/index.js").Tree;
+var TreeSerializeDirector = require("../dist/tree.cjs.js").TreeSerializeDirector;
+var StringBuilder = require("../dist/tree.cjs.js").StringBuilder;
+var Tree = require("../dist/tree.cjs.js").Tree;
 
 exports["TreeSerializeDirector: constructor"] = function(test) {
   var director = new TreeSerializeDirector(new StringBuilder());

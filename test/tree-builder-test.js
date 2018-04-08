@@ -1,5 +1,5 @@
-var TreeBuilder = require("../dist/index.js").TreeBuilder;
-var Node = require("../dist/index.js").Node;
+var TreeBuilder = require("../dist/tree.cjs.js").TreeBuilder;
+var Node = require("../dist/tree.cjs.js").Node;
 
 exports["TreeBuilder: constructor"] = function(test) {
   var builder = new TreeBuilder();

@@ -3,6 +3,10 @@ import Tree from "./tree.js";
 import Node from "./tree-node.js";
 Tree.Node = Node;
 
+import asArray from "./helpers/as-array.js";
+import uid from "./helpers/id.js";
+import pushNew from "./helpers/push-new.js";
+
 import TreeBuilder from "./tree-builder.js";
 
 import StringParseDirector from "./build-from-string.js";
@@ -31,6 +35,9 @@ export {
 , TreeRelation
 , StringBuilder
 , TreeSerializeDirector
+, asArray
+, uid
+, pushNew
 , relationBetweenTrees
 , oneToOneRelationBetweenTrees
 };

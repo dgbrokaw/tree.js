@@ -1,6 +1,6 @@
-var DepthFirstTreeIterator = require("../dist/index.js").DepthFirstTreeIterator;
-var Node = require("../dist/index.js").Node;
-var Tree = require("../dist/index.js").Tree;
+var DepthFirstTreeIterator = require("../dist/tree.cjs.js").DepthFirstTreeIterator;
+var Node = require("../dist/tree.cjs.js").Node;
+var Tree = require("../dist/tree.cjs.js").Tree;
 
 exports["DepthFirstTreeIterator: constructor"] = function(test) {
   var iterator1 = new DepthFirstTreeIterator();

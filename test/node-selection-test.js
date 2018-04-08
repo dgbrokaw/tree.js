@@ -1,6 +1,6 @@
-var NodeSelection = require("../dist/index.js").NodeSelection;
-var Tree = require("../dist/index.js").Tree;
-var Node = require("../dist/index.js").Node;
+var NodeSelection = require("../dist/tree.cjs.js").NodeSelection;
+var Tree = require("../dist/tree.cjs.js").Tree;
+var Node = require("../dist/tree.cjs.js").Node;
 
 exports["NodeSelection: constructor"] = function(test) {
   var sel = new NodeSelection();
