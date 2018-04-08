@@ -10,7 +10,7 @@
  */
 
 import Node from "./tree-node.js";
-import { parseString } from "./serialization.js";
+import parseString from "./parse-string.js";
 import validateTree from "./validate.js";
 import asArray from "./helpers/as-array.js";
 import id from "./helpers/id.js";

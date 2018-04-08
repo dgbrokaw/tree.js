@@ -6,7 +6,7 @@ import relationBetweenTrees from "./relate.js";
 import oneToOneRelationBetweenTrees from "./relate-one-to-one.js";
 import DepthFirstTreeIterator from "./iterator-depth-first.js";
 import * as iteration from "./iteration.js";
-import { stringifyTree } from "./serialization.js";
+import stringifyTree from "./stringify-tree.js";
 
 // Composite class for creating n-ary trees. Each node should have a unique id.
 export default class Node {

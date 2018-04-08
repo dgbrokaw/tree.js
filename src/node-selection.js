@@ -1,5 +1,5 @@
 import asArray from "./helpers/as-array.js";
-import { stringifyTree } from "./serialization.js";
+import stringifyTree from "./stringify-tree.js";
 
 // NodeSelection provides an interface for storing and interacting with groups/
 // ranges of nodes within a single tree.
