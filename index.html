@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>tree.js</title>
+</head>
+
+<body>
+</body>
+
+<script type="module">
+  import { Tree } from "./dist/tree.es.js";
+  alert("Here's a tree: " + Tree.parse("A[B,C]").stringify());
+</script>
+<script nomodule src="./dist/tree.umd.js"></script>
+<script nomodule>
+  alert("Here's a tree: " + tree.Tree.parse("A[B,C]").stringify());
+</script>
+</html>

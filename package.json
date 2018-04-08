@@ -3,7 +3,7 @@
   "description": "A javascript library for creating and manipulating fully linked tree structures.",
   "version": "2.0.0",
   "main": "dist/tree.cjs.js",
-  "module": "dist/tree.esm.js",
+  "module": "dist/tree.es.js",
   "browser": "dist/tree.umd.js",
   "keywords": [
     "tree"
