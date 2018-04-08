@@ -1,4 +1,4 @@
-var pushNew = require("../dist/helpers/push-new.js").default;
+var pushNew = require("../dist/tree.cjs.js").pushNew;
 var Node = require("../dist/tree.cjs.js").Node;
 
 exports["pushNew: all different"] = function(test) {
