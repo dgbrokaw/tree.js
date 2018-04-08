@@ -1,4 +1,4 @@
-var asArray = require("../../dist/helpers/as-array.js").default;
+var asArray = require("../dist/tree.cjs.js").asArray;
 
 exports["asArray: no argument"] = function(test) {
   var arr = asArray();
