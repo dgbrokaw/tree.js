@@ -1,5 +1,5 @@
-var pushNew = require("../../dist/helpers/push-new.js").default;
-var Node = require("../../dist/index.js").Node;
+var pushNew = require("../dist/helpers/push-new.js").default;
+var Node = require("../dist/index.js").Node;
 
 exports["pushNew: all different"] = function(test) {
   var arr1 = [new Node(), new Node()];

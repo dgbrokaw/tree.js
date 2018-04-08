@@ -1,5 +1,5 @@
-var id = require("../../dist/helpers/id.js").default;
-var pushNew = require("../../dist/helpers/push-new.js").default;
+var id = require("../dist/helpers/id.js").default;
+var pushNew = require("../dist/helpers/push-new.js").default;
 
 exports["Id: create unique ids"] = function(test) {
   var results = [];
